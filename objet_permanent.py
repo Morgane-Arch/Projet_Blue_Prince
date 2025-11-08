@@ -1,6 +1,7 @@
 class ObjetPermanent:
-    def __init__(self, nom):
+    def __init__(self, nom, description):
         self.nom = nom
+        self.description = description
 
     def appliquer(self, joueur):
         if self.nom == "pelle":
