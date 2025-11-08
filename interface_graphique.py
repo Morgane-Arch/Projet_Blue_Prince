@@ -92,15 +92,19 @@ def draw_direction_highlight(rect, direction):
     """Dessine un surlignage sur le bord de la case selon la direction choisie."""
     margin = 4
     thickness = 6
-    if direction == "up":
+    if direction == "up" and selected_cell[0] != 0:
         area = pygame.Rect(rect.x + margin, rect.y, CELL_SIZE - 2 * margin, thickness)
-    elif direction == "down":
+        pygame.draw.rect(screen, CYAN, area)
+    elif direction == "down"  and selected_cell[0] != 8:
         area = pygame.Rect(rect.x + margin, rect.bottom - thickness, CELL_SIZE - 2 * margin, thickness)
-    elif direction == "left":
+        pygame.draw.rect(screen, CYAN, area)
+    elif direction == "left" and selected_cell[1] != 0:
         area = pygame.Rect(rect.x, rect.y + margin, thickness, CELL_SIZE - 2 * margin)
-    elif direction == "right":
+        pygame.draw.rect(screen, CYAN, area)
+    elif direction == "right" and selected_cell[1] != 4:
         area = pygame.Rect(rect.right - thickness, rect.y + margin, thickness, CELL_SIZE - 2 * margin)
-    pygame.draw.rect(screen, CYAN, area)
+        pygame.draw.rect(screen, CYAN, area)
+    
 
 
 def draw_grid():
