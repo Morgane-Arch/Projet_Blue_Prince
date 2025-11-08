@@ -38,9 +38,12 @@ ROOM_IMAGE_FOLDER = "Images_salles"
 # Format : (nom affiché, nom_fichier)
 room_types = [
     ("Entrance Hall", "Entrance_Hall_Icon.png"),
+    ("Antechamber", "Antechamber_Icon.png"),
     ("The Foundation", "The_Foundation_Icon.png"),
     ("Spare Room", "Spare_Room_Icon.png"),
     ("Rotunda", "Rotunda_Icon.png"),
+    ("Attic", "Attic_Icon.png"),
+    ("Billiard Room", "Billiard_Room_Icon.png")
 ]
 selected_room_index = 0
 
@@ -49,7 +52,7 @@ room_images_grid = []   # petites images pour la grille
 room_images_large = []  # grandes images pour la sélection à droite
 
 IMG_SIZE_GRID = int(CELL_SIZE * 0.9)  # ~72px si CELL_SIZE=80
-IMG_SIZE_LARGE = 150                  # affichage à droite
+IMG_SIZE_LARGE = 160                  # affichage à droite
 
 for name, filename in room_types:
     path = os.path.join(ROOM_IMAGE_FOLDER, filename)
@@ -67,7 +70,7 @@ for name, filename in room_types:
     room_images_large.append(img_large)
 
 # --- Sélection aléatoire initiale ---
-salles_affichees = random.sample(room_types, 3)
+salles_affichees = random.sample(room_types[2:], 3)
 
 
 # --- Données de jeu ---
@@ -81,6 +84,7 @@ inventory = ["Potion", "Clé d'argent"]
 grid = [[None for _ in range(COLS)] for _ in range(ROWS)]
 # Placer "Entrance Hall" sur la case de départ
 grid[8][2] = 0  # 0 = index de "Entrance Hall" dans room_types
+grid[0][2] = 1  # 1 = index de "Antechamber" dans room_types
 
 
 # --- Fonctions d'affichage ---
@@ -156,7 +160,7 @@ def draw_bottom_right():
     screen.blit(label, (x0 + 10, y0 + 10))
 
     # Paramètres d'affichage
-    img_size = 150
+    img_size = 160
     spacing = 180
     start_x = x0 + 40
     base_y = y0 + 60
@@ -230,8 +234,10 @@ def place_room():
 
     # Trouver l'index correspondant dans room_types
     room_index = next(idx for idx, (n, f) in enumerate(room_types) if n == name)
-    grid[r][c] = room_index
+    if grid[r][c] == None :
+        grid[r][c] = room_index
+        # --- Nouveau tirage aléatoire ---
+        salles_affichees = random.sample(room_types[2:], 3)
+        selected_room_index = 0  # réinitialise la sélection
 
-    # --- Nouveau tirage aléatoire ---
-    salles_affichees = random.sample(room_types, 3)
-    selected_room_index = 0  # réinitialise la sélection
+    
