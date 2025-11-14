@@ -3,22 +3,25 @@ import sys
 import os
 import random
 
-# --- Initialisation ---
+
+############ Définition des paramètres d'affichage ############
+
+# Initialisation de la fenêtre d'affichage
 pygame.init()
 pygame.display.set_caption("Prototype Blue Prince")
 
-# --- Dimensions de la fenêtre ---
+# Dimensions de la fenêtre
 WIDTH, HEIGHT = 1000, 750
 LEFT_PANEL_WIDTH = 400  # zone des salles
 RIGHT_PANEL_WIDTH = WIDTH - LEFT_PANEL_WIDTH
 TOP_RIGHT_HEIGHT = 200
 BOTTOM_RIGHT_HEIGHT = HEIGHT - TOP_RIGHT_HEIGHT
 
-# --- Grille : 9 lignes, 5 colonnes ---
+# Grille de gauche (9 lignes et 5 colonnes)
 ROWS, COLS = 9, 5
 CELL_SIZE = LEFT_PANEL_WIDTH // COLS
 
-# --- Couleurs ---
+# Définitions de certaines couleurs utiles par la suite pour l'affichage
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 GRAY = (40, 40, 40)
@@ -26,69 +29,18 @@ BLUE = (50, 100, 200)
 CYAN = (0, 255, 255)
 GREEN = (60, 180, 75)
 
-# --- Fenêtre ---
+# Paramètres de la fenêtre pour réglage de l'affichage du jeu
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 font = pygame.font.SysFont("arial", 20)
 
-# --- Dossier contenant les images des salles ---
-ROOM_IMAGE_FOLDER = "Images_salles"
-
-# --- Types de salles disponibles ---
-# Format : (nom affiché, nom_fichier)
-room_types = [
-    ("Entrance Hall", "Entrance_Hall_Icon.png"),
-    ("Antechamber", "Antechamber_Icon.png"),
-    ("The Foundation", "The_Foundation_Icon.png"),
-    ("Spare Room", "Spare_Room_Icon.png"),
-    ("Rotunda", "Rotunda_Icon.png"),
-    ("Attic", "Attic_Icon.png"),
-    ("Billiard Room", "Billiard_Room_Icon.png")
-]
-selected_room_index = 0
-
-# --- Chargement des images (deux tailles) ---
-room_images_grid = []   # petites images pour la grille
-room_images_large = []  # grandes images pour la sélection à droite
-
-IMG_SIZE_GRID = int(CELL_SIZE * 0.9)  # ~72px si CELL_SIZE=80
-IMG_SIZE_LARGE = 160                  # affichage à droite
-
-for name, filename in room_types:
-    path = os.path.join(ROOM_IMAGE_FOLDER, filename)
-    if os.path.exists(path):
-        original = pygame.image.load(path).convert_alpha()
-        img_grid = pygame.transform.smoothscale(original, (IMG_SIZE_GRID, IMG_SIZE_GRID))
-        img_large = pygame.transform.smoothscale(original, (IMG_SIZE_LARGE, IMG_SIZE_LARGE))
-    else:
-        img_grid = pygame.Surface((IMG_SIZE_GRID, IMG_SIZE_GRID))
-        img_grid.fill((150, 0, 150))
-        img_large = pygame.Surface((IMG_SIZE_LARGE, IMG_SIZE_LARGE))
-        img_large.fill((170, 0, 170))
-    
-    room_images_grid.append(img_grid)
-    room_images_large.append(img_large)
-
-# --- Sélection aléatoire initiale ---
-salles_affichees = random.sample(room_types[2:], 3)
 
 
-# --- Données de jeu ---
-selected_cell = [8, 2]  # départ au centre bas
-selected_direction = None
-steps = 0
-keys = 0
-inventory = ["Potion", "Clé d'argent"]
-
-# --- Grille : chaque case contient un index de salle ou None ---
-grid = [[None for _ in range(COLS)] for _ in range(ROWS)]
-# Placer "Entrance Hall" sur la case de départ
-grid[8][2] = 0  # 0 = index de "Entrance Hall" dans room_types
-grid[0][2] = 1  # 1 = index de "Antechamber" dans room_types
 
 
-# --- Fonctions d'affichage ---
-def draw_direction_highlight(rect, direction):
+############ Définition des fonctions d'affichage ############
+
+def draw_direction_highlight(rect, direction, selected_cell):
     """Dessine un surlignage sur le bord de la case selon la direction choisie."""
     margin = 4
     thickness = 6
@@ -106,8 +58,7 @@ def draw_direction_highlight(rect, direction):
         pygame.draw.rect(screen, CYAN, area)
     
 
-
-def draw_grid():
+def draw_grid(selected_direction, selected_cell, grid, room_images_grid):
     """Affiche la grille principale des salles."""
     for r in range(ROWS):
         for c in range(COLS):
@@ -127,10 +78,10 @@ def draw_grid():
             if [r, c] == selected_cell:
                 pygame.draw.rect(screen, BLUE, rect, 3)
                 if selected_direction:
-                    draw_direction_highlight(rect, selected_direction)
+                    draw_direction_highlight(rect, selected_direction, selected_cell)
 
 
-def draw_top_right():
+def draw_top_right(inventory, steps, keys):
     """Affiche les infos du joueur."""
     x0 = LEFT_PANEL_WIDTH
     pygame.draw.rect(screen, GRAY, (x0, 0, RIGHT_PANEL_WIDTH, TOP_RIGHT_HEIGHT))
@@ -155,7 +106,7 @@ def draw_top_right():
         screen.blit(item_text, (inv_x, inv_y + 25 * (i + 1)))
 
 
-def draw_bottom_right():
+def draw_bottom_right(salles_affichees, room_types, selected_room_index, room_images_large):
     """Affiche 3 salles choisies aléatoirement (renouvelées après chaque placement)."""
     x0 = LEFT_PANEL_WIDTH
     y0 = TOP_RIGHT_HEIGHT
@@ -188,19 +139,21 @@ def draw_bottom_right():
         screen.blit(text_img, text_rect)
 
 
-# --- Fonctions de jeu ---
-def change_room_selection(key):
+
+
+############ Définition des fonctions de jeu (A INCLURE DANS LES CLASSES JOUEUR ET PIECE ?) ############
+
+def change_room_selection(key, selected_room_index, salles_affichees):
     """Navigue dans la liste des salles affichées."""
-    global selected_room_index
     if key in (pygame.K_4, pygame.K_KP4):
         selected_room_index = (selected_room_index - 1) % len(salles_affichees)
     elif key in (pygame.K_6, pygame.K_KP6):
         selected_room_index = (selected_room_index + 1) % len(salles_affichees)
+    return selected_room_index
 
 
-def set_direction(key):
+def set_direction(key, selected_direction):
     """Change la direction mise en surbrillance sans bouger."""
-    global selected_direction
     if key == pygame.K_UP:
         selected_direction = "up"
     elif key == pygame.K_DOWN:
@@ -209,11 +162,11 @@ def set_direction(key):
         selected_direction = "left"
     elif key == pygame.K_RIGHT:
         selected_direction = "right"
+    return selected_direction
 
 
-def move_in_direction():
+def move_in_direction(selected_cell, steps, selected_direction):
     """Déplace la sélection dans la direction choisie."""
-    global selected_cell, steps
     if not selected_direction:
         return
     r, c = selected_cell
@@ -227,12 +180,11 @@ def move_in_direction():
         c += 1
     selected_cell = [r, c]
     steps += 1
+    return selected_cell, steps
 
 
-def place_room():
+def place_room(salles_affichees, selected_room_index, selected_cell, room_types, grid):
     """Place la salle sélectionnée dans la case actuelle, puis renouvelle le choix aléatoire."""
-    global salles_affichees, selected_room_index
-
     r, c = selected_cell
     name, _ = salles_affichees[selected_room_index]
 
@@ -240,8 +192,7 @@ def place_room():
     room_index = next(idx for idx, (n, f) in enumerate(room_types) if n == name)
     if grid[r][c] == None :
         grid[r][c] = room_index
-        # --- Nouveau tirage aléatoire ---
-        salles_affichees = random.sample(room_types[2:], 3)
-        selected_room_index = 0  # réinitialise la sélection
+        
+    return grid
 
     
