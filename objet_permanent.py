@@ -19,29 +19,29 @@ class ObjetPermanent:
         elif self.nom == "patte_de_lapin":
             joueur.chance_objets += 1
 
-# ===== Instances d'objets permanents utilisables dans le jeu =====
+PERMANENTS = {
+    "pelle": ObjetPermanent(
+        "pelle",
+        "Permet de creuser à certains endroits, permettant de trouver certains objets."
+    ),
 
-PELLE = ObjetPermanent(
-    "pelle",
-    "Permet de creuser à certains endroits, permettant de trouver certains objets"
-)
+    "marteau": ObjetPermanent(
+        "marteau",
+        "Permet de briser les cadenas des coffres sans dépenser la clé."
+    ),
 
-MARTEAU = ObjetPermanent(
-    "marteau",
-    "Permet de briser les cadenas des coffres sans dépenser la clé."
-)
+    "kit_de_crochetage": ObjetPermanent(
+        "kit_de_crochetage",
+        "Permet d'ouvrir certaines portes sans dépenser la clé."
+    ),
 
-KIT_CROCHETAGE = ObjetPermanent(
-    "kit_de_crochetage",
-    "Permet d'ouvrir certaines portes sans dépenser la clé."
-)
+    "détecteur_de_métaux": ObjetPermanent(
+        "détecteur_de_métaux",
+        "Augmente la chance de trouver des clés et des pièces."
+    ),
 
-DETECTEUR = ObjetPermanent(
-    "détecteur_de_métaux",
-    "Augmente la chance de trouver des clés et des pièces."
-)
-
-PATTE_LAPIN = ObjetPermanent(
-    "patte_de_lapin",
-    "Augmente la chance de trouver des objets."
-)
+    "patte_de_lapin": ObjetPermanent(
+        "patte_de_lapin",
+        "Augmente la chance de trouver des objets."
+    )
+}
