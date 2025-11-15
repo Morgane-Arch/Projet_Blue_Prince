@@ -53,19 +53,34 @@ class Joueur:
 
     def move_in_direction(self, grid):
         """Déplace la sélection dans la direction choisie."""
-        if not self.direction:
-            return
-        r, c = self.position
-        if self.direction == "up" and r > 0:
-            r -= 1
-            self.consommables.pas -= 1
-        elif self.direction == "down" and r < ROWS - 1:
-            r += 1
-            self.consommables.pas -= 1
+        #### Fonction modifiée, regarder ancien commit si pas validé
+
+        r, c = self.position #rows, columns
+        new_r, new_c = r, c #nouvelle position
+
+        #Test pour vois si on peut adopter la position (si on est au bout de la grille)
+        if self.direction == "up" and r > 0 : 
+            new_r -= 1
+        elif self.direction == "down" and r < ROWS - 1 : 
+            new_r += 1
         elif self.direction == "left" and c > 0:
-            c -= 1
-            self.consommables.pas -= 1
+            new_c -= 1
         elif self.direction == "right" and c < COLS - 1:
-            c += 1
-            self.consommables.pas -= 1
-        self.position = [r, c]
+            new_c += 1
+
+        #Si la position a vraiment changé (pas coincé par un bord par exemple)
+        if (new_r, new_c) != (r, c) :
+            encore_en_vie = self.consommables.retirer_objet("pas", 1) #on retire le pas
+
+            #si objetconso.retirer_objet renvoie false : cela signifie qu'on n'a plus de pas
+            if not encore_en_vie : 
+                print("Game over !")
+                return
+        
+        #mise à jour de la position
+        self.position = [new_r, new_c]
+
+
+
+
+
