@@ -1,51 +1,48 @@
 import random
-from pieces import salles 
+from pieces import salles
 from objet_permanent import PERMANENTS
+
 
 class Mansion:
     def __init__(self):
         self.rows = 9
         self.cols = 5
 
-        # un map de 9x5
-        self.grid = [[None for _ in range(self.cols)] for _ in range(self.rows)]
+        # Carte 9x5
+        self.grille = [[None for _ in range(self.cols)] for _ in range(self.rows)]
 
-        self.grid = [[None for _ in range(self.cols)] for _ in range(self.rows)]
+        # Position initiale du joueur
+        self.case_selectionnee = [4, 2]
 
-        # on commence par la case au milieu
-        self.selected_cell = [4, 2]
+        # Direction sélectionnée 
+        self.direction_selectionnee = None
 
-        self.selected_direction = None
+        # Liste de toutes les salles
+        self.types_salles = [(nom, piece.image) for nom, piece in salles.items()]
 
-        # on introduit toutes les salles qu'on a
-        self.room_types = [(nom, piece.image) for nom, piece in salles.items()]
-
-        # 3 salles aléatoires
-        self.salles_affichees = random.sample(self.room_types[2:], 3)
-        self.selected_room_index = 0
-
-        def Afficher_nom_salle(self):
-            """Obtenir le nom de la salle actuelle"""
-            r, c = self.selected_cell
-            if self.grid[r][c] is None:
-                return None
-            nom = self.room_types[self.grid[r][c]][0]
-            return salles[nom]
+        # 3 salles tirées au hasard
+        self.salles_affichees = random.sample(self.types_salles[2:], 3)
+        self.index_salle_selectionnee = 0
 
 
+    # ======================
+    # Obtenir la salle actuelle
+    # ======================
+    def afficher_nom_salle(self):
+        r, c = self.case_selectionnee
+        if self.grille[r][c] is None:
+            return None
+        nom = self.types_salles[self.grille[r][c]][0]
+        return salles[nom]
 
-    def set_direction(self, direction):
-        self.selected_direction = direction
 
-
-   
+    # ======================
+    # Déplacement du joueur
+    # ======================
     def bouger(self, joueur, direction):
-        """On fait bouger le joueur"""
-
-        r, c = self.selected_cell
+        r, c = self.case_selectionnee
         nr, nc = r, c
 
-        # nouvelle position
         if direction == "haut" and r > 0:
             nr -= 1
         elif direction == "bas" and r < self.rows - 1:
@@ -55,90 +52,86 @@ class Mansion:
         elif direction == "droite" and c < self.cols - 1:
             nc += 1
         else:
-            """si on dépasse la frontière, on ne bouge pas"""
-            return False  
-
-        
-        room_here_index = self.grid[r][c]
-        room_next_index = self.grid[nr][nc]
-
-        if room_here_index is None or room_next_index is None:
-            """s'il n'y a pas de salle à la position actuelle/ prochaine,
-            on ne bouge pas"""
             return False
 
-        room_here = salles[self.room_types[room_here_index][0]]
-        room_next = salles[self.room_types[room_next_index][0]]
+        # Vérification de salle destination
+        if self.grille[r][c] is None or self.grille[nr][nc] is None:
+            return False
 
-       
+        salle_actuelle = salles[self.types_salles[self.grille[r][c]][0]]
+
         mapping = {"haut": "N", "bas": "S", "gauche": "W", "droite": "E"}
 
-        if room_here.portes[mapping[direction]] == 0:
-            #porte fermée, il nous faut la clé ou le kit 
+        # Porte fermée 
+        if salle_actuelle.portes[mapping[direction]] == 0:
+
+            # joueur peut ouvrir ?
             if joueur.peut_ouvrir_portes or joueur.consommables.cle > 0:
-                # on utilise la clé
+
+                # s'il utilise une clé, on la retire
                 if not joueur.peut_ouvrir_portes:
                     joueur.consommables.retirer_objet("cle", 1)
-            else:
-                return False  # on n'a rien pour ouvrir
 
-        # on retire 1 pas
-        result = joueur.consommables.retirer_objet("pas", 1)
-        if not result:
-            print("GAME OVER — Vous n'avez plus de pas")
+            else:
+                return False
+
+        # Sinon consommer 1 pas
+        if not joueur.consommables.retirer_objet("pas", 1):
+            print("GAME OVER — plus de pas")
             return False
 
-        # on met à jour la nouvelle position
-        self.selected_cell = [nr, nc]
+        # Nouvelle position
+        self.case_selectionnee = [nr, nc]
 
-        # on rentre dans la salle
-        self.enter_room(joueur)
-
-        return True
-
-
-    
-    def place_selected_room(self):
-        r, c = self.selected_cell
-
-        if self.grid[r][c] is not None:
-            return False  # salle déjà posée
-
-        # on obtient le nom de la salle
-        nom, _ = self.salles_affichees[self.selected_room_index]
-
-        # on trouve l'index correpondant
-        room_index = next(i for i, (n, f) in enumerate(self.room_types) if n == nom)
-
-        # on le met dans grid
-        self.grid[r][c] = room_index
-
-        # on retire aléatoirement 3 salles
-        self.salles_affichees = random.sample(self.room_types[2:], 3)
-        self.selected_room_index = 0
+        # Entrer dans la salle
+        self.entrer_dans_salle(joueur)
 
         return True
 
 
-    # Navigue dans la liste des salles affichées
-    def change_room_selection(self, key):
+    # ======================
+    # Placer une salle
+    # ======================
+    def placer_salle_selectionnee(self):
+        r, c = self.case_selectionnee
+
+        if self.grille[r][c] is not None:
+            return False
+
+        nom, _ = self.salles_affichees[self.index_salle_selectionnee]
+        index = next(i for i, (n, f) in enumerate(self.types_salles) if n == nom)
+
+        self.grille[r][c] = index
+
+        # Nouveau tirage des salles
+        self.salles_affichees = random.sample(self.types_salles[2:], 3)
+        self.index_salle_selectionnee = 0
+
+        return True
+
+
+    # ======================
+    # Naviguer dans les salles proposées
+    # ======================
+    def changer_selection_salle(self, key):
         if key == 4:
-            self.selected_room_index = (self.selected_room_index - 1) % len(self.salles_affichees)
+            self.index_salle_selectionnee = (self.index_salle_selectionnee - 1) % len(self.salles_affichees)
         elif key == 6:
-            self.selected_room_index = (self.selected_room_index + 1) % len(self.salles_affichees)
+            self.index_salle_selectionnee = (self.index_salle_selectionnee + 1) % len(self.salles_affichees)
 
 
-  
-    def enter_room(self, joueur):
-        """on gagne les objets en fonction de la salle"""
+    # ======================
+    # Entrer → obtenir objets
+    # ======================
+    def entrer_dans_salle(self, joueur):
 
-        room = self.Afficher_nom_salle()
-        if room is None:
+        salle = self.afficher_nom_salle()
+        if salle is None:
             return
 
-        for obj in room.objets:
+        for obj in salle.objets:
 
-        
+            # ===== nourriture : donne des pas =====
             if obj in ("pomme", "banana", "sandwich", "gateau", "repas"):
                 gains = {
                     "pomme": 2,
@@ -149,28 +142,26 @@ class Mansion:
                 }
                 joueur.consommables.ajouter_objet("pas", gains[obj])
 
+        
             elif obj == "gemme":
                 joueur.consommables.ajouter_objet("gemme", 1)
 
+       
             elif obj == "clé":
                 joueur.consommables.ajouter_objet("cle", 1)
 
-      
+          
             elif obj == "permanent":
-                self.give_random_permanent(joueur)
+                self.donner_permanent_aleatoire(joueur)
 
           
-            elif obj == "dig":
-                if joueur.peut_creuser:
-             
-                    joueur.consommables.ajouter_objet("piece", 1)
-
-        
+           
 
 
-
-
-    def donne_objetspermanent(self, joueur):
+    # ======================
+    # Obtenir un objet permanent
+    # ======================
+    def donner_permanent_aleatoire(self, joueur):
         options = list(PERMANENTS.values())
         objet = random.choice(options)
         objet.appliquer(joueur)
