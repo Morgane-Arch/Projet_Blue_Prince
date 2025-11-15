@@ -140,31 +140,3 @@ def draw_bottom_right(salles_affichees, room_types, selected_room_index, room_im
 
 
 
-
-############ Définition des fonctions de jeu (A INCLURE DANS LES CLASSES JOUEUR ET PIECE ?) ############
-
-def change_room_selection(key, selected_room_index, salles_affichees):
-    """Navigue dans la liste des salles affichées."""
-    if key in (pygame.K_4, pygame.K_KP4):
-        selected_room_index = (selected_room_index - 1) % len(salles_affichees)
-    elif key in (pygame.K_6, pygame.K_KP6):
-        selected_room_index = (selected_room_index + 1) % len(salles_affichees)
-    return selected_room_index
-
-
-def place_room(salles_affichees, selected_room_index, selected_cell, room_types, grid):
-    """Place la salle sélectionnée dans la case actuelle, puis renouvelle le choix aléatoire."""
-    r, c = selected_cell
-    name, _ = salles_affichees[selected_room_index]
-
-    # Trouver l'index correspondant dans room_types
-    room_index = next(idx for idx, (n, f) in enumerate(room_types) if n == name)
-    if grid[r][c] == None :
-        grid[r][c] = room_index
-        # Nouveau tirage des salles aléatoire
-        salles_affichees = random.sample(room_types[2:], 3)
-        selected_room_index = 0  # réinitialise la sélection de la salle
-        
-    return grid, salles_affichees, selected_room_index
-
-    
