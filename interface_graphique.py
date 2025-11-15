@@ -81,14 +81,14 @@ def draw_grid(selected_direction, selected_cell, grid, room_images_grid):
                     draw_direction_highlight(rect, selected_direction, selected_cell)
 
 
-def draw_top_right(inventory, steps, keys):
+def draw_top_right(inventory, joueur):
     """Affiche les infos du joueur."""
     x0 = LEFT_PANEL_WIDTH
     pygame.draw.rect(screen, GRAY, (x0, 0, RIGHT_PANEL_WIDTH, TOP_RIGHT_HEIGHT))
 
     # --- Texte des compteurs ---
-    steps_text = font.render(f"Pas : {steps}", True, WHITE)
-    keys_text = font.render(f"Clés : {keys}", True, WHITE)
+    steps_text = font.render(f"Pas : {joueur.consommables.pas}", True, WHITE)
+    keys_text = font.render(f"Clés : {joueur.consommables.cle}", True, WHITE)
 
     # Position alignée à droite
     right_margin = WIDTH - 20
@@ -152,37 +152,6 @@ def change_room_selection(key, selected_room_index, salles_affichees):
     return selected_room_index
 
 
-def set_direction(key, selected_direction):
-    """Change la direction mise en surbrillance sans bouger."""
-    if key == pygame.K_UP:
-        selected_direction = "up"
-    elif key == pygame.K_DOWN:
-        selected_direction = "down"
-    elif key == pygame.K_LEFT:
-        selected_direction = "left"
-    elif key == pygame.K_RIGHT:
-        selected_direction = "right"
-    return selected_direction
-
-
-def move_in_direction(selected_cell, steps, selected_direction):
-    """Déplace la sélection dans la direction choisie."""
-    if not selected_direction:
-        return
-    r, c = selected_cell
-    if selected_direction == "up" and r > 0:
-        r -= 1
-    elif selected_direction == "down" and r < ROWS - 1:
-        r += 1
-    elif selected_direction == "left" and c > 0:
-        c -= 1
-    elif selected_direction == "right" and c < COLS - 1:
-        c += 1
-    selected_cell = [r, c]
-    steps += 1
-    return selected_cell, steps
-
-
 def place_room(salles_affichees, selected_room_index, selected_cell, room_types, grid):
     """Place la salle sélectionnée dans la case actuelle, puis renouvelle le choix aléatoire."""
     r, c = selected_cell
@@ -192,7 +161,10 @@ def place_room(salles_affichees, selected_room_index, selected_cell, room_types,
     room_index = next(idx for idx, (n, f) in enumerate(room_types) if n == name)
     if grid[r][c] == None :
         grid[r][c] = room_index
+        # Nouveau tirage des salles aléatoire
+        salles_affichees = random.sample(room_types[2:], 3)
+        selected_room_index = 0  # réinitialise la sélection de la salle
         
-    return grid
+    return grid, salles_affichees, selected_room_index
 
     

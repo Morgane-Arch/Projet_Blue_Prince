@@ -1,4 +1,5 @@
 from interface_graphique import *
+from joueur import Joueur
 import pygame
 import sys
 import os
@@ -53,12 +54,11 @@ for name, filename in room_types:
 
 ############ Initialisation des données du jeu ############
 
+# Création du joueur
+joueur = Joueur([8, 2]) # création d'un joueur à la position initiale [8,2]
+
 # Données du jeu
 salles_affichees = random.sample(room_types[2:], 3) # Séléction aléatoire initiale des 3 images de droite
-selected_cell = [8, 2]  # position de départ du joueur (A INCLURE DANS CLASSE JOUEUR ?)
-selected_direction = None  # pas de direction spécifique définit au tout début
-steps = 0  # Nombre de pas (PARTIE A MODIFIER AVEC OBJET CONSO)
-keys = 0  # Nombre de clés (PARTIE A MODIFIER AVEC OBJET CONSO)
 inventory = ["Potion", "Clé d'argent"]  # Objets contenu dans l'inventaire situé à gauche, objets permanents posséder par le joueur
 # VOIR COMMENT INCLURE OBJETS PERMANENTS ICI
 
@@ -81,21 +81,19 @@ while True:
             sys.exit()
         elif event.type == pygame.KEYDOWN:
             if event.key in (pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT):
-                selected_direction = set_direction(event.key, selected_direction)
+                joueur.set_direction(event.key)
             elif event.key in (pygame.K_4, pygame.K_6, pygame.K_KP4, pygame.K_KP6):
                 selected_room_index = change_room_selection(event.key, selected_room_index, salles_affichees)
             elif event.key in (pygame.K_RETURN, pygame.K_KP_ENTER):
-                selected_cell, steps = move_in_direction(selected_cell, steps, selected_direction)
-                grid = place_room(salles_affichees, selected_room_index, selected_cell, room_types, grid)
+                joueur.move_in_direction(grid)
+                grid, salles_affichees, selected_room_index = place_room(salles_affichees, selected_room_index, joueur.position, room_types, grid)
 
-                # Nouveau tirage des salles aléatoire
-                salles_affichees = random.sample(room_types[2:], 3)
-                selected_room_index = 0  # réinitialise la sélection de la salle
+                
 
     # Affichage
     screen.fill(BLACK)
-    draw_grid(selected_direction, selected_cell, grid, room_images_grid)
-    draw_top_right(inventory, steps, keys)
+    draw_grid(joueur.direction, joueur.position, grid, room_images_grid)
+    draw_top_right(inventory, joueur)
     draw_bottom_right(salles_affichees, room_types, selected_room_index, room_images_large)
 
     pygame.display.flip()
