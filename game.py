@@ -7,17 +7,22 @@ import interface_graphique as ui
 class Game:
 
     def __init__(self):
-        # Initialisation 
-        self.joueur = Joueur()
+        # Création du manoir (carte 9x5)
         self.mansion = Mansion()
+
+        # Création du joueur à la position de départ du manoir
+        self.joueur = Joueur(self.mansion.selected_cell)
+
+        # Indique si le jeu doit continuer
         self.running = True
+
 
     def play(self):
         """Boucle principale du jeu"""
 
         while self.running:
 
-         
+        
             for event in pygame.event.get():
 
                 if event.type == pygame.QUIT:
@@ -25,7 +30,8 @@ class Game:
 
                 elif event.type == pygame.KEYDOWN:
 
-                    # Déplacement du joueur
+                    # Déplacements
+
                     if event.key == pygame.K_UP:
                         self.mansion.bouger(self.joueur, "haut")
 
@@ -38,20 +44,24 @@ class Game:
                     elif event.key == pygame.K_RIGHT:
                         self.mansion.bouger(self.joueur, "droite")
 
-                    # Choisir une salle (4 = gauche, 6 = droite)
+                    #  Changer la salle 
+
                     elif event.key == pygame.K_4:
                         self.mansion.change_room_selection(4)
 
                     elif event.key == pygame.K_6:
                         self.mansion.change_room_selection(6)
 
-                    # Placer une salle
+                    # Placer une salle dans la grille
+
                     elif event.key == pygame.K_p:
                         self.mansion.place_selected_room()
 
-           # afficher graphique
+
+         
             ui.screen.fill((0, 0, 0))
 
+            # Grille de gauche
             ui.draw_grid(
                 self.mansion.selected_direction,
                 self.mansion.selected_cell,
@@ -59,11 +69,13 @@ class Game:
                 ui.room_images_grid
             )
 
+            # Panneau de droite haut 
             ui.draw_top_right(
-                self.joueur.inventaire_textuel(),
+                self.joueur.objets_permanents,
                 self.joueur
             )
 
+            # Panneau de droite bas : choix des 3 salles
             ui.draw_bottom_right(
                 self.mansion.salles_affichees,
                 self.mansion.room_types,
