@@ -3,10 +3,9 @@ from objet_permanent import ObjetPermanent
 
 class Joueur:
     def __init__(self):
-        # nombre de pas initial
-        self.pas = 70
+      
 
-        # Inventaire consommable (Sofia)
+        # objets consommables (Sofia)
         self.consommables = ObjetsConsommables()
 
         # les objets permanents 

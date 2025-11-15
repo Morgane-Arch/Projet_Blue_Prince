@@ -1,5 +1,11 @@
 class ObjetPermanent:
-    def __init__(self, nom, description):
+    def __init__(self, nom, description, peut_creuser = False, peut_briser_cadenas = False,
+                peut_ouvrir_portes = False, chance_cle_pieces = 0, chance_objets = 0):
+        self.peut_creuser = peut_creuser
+        self.peut_briser_cadenas = peut_briser_cadenas
+        self.peut_ouvrir_portes = peut_ouvrir_portes
+        self.chance_cle_pieces = chance_cle_pieces
+        self.chance_objets = chance_objets
         self.nom = nom
         self.description = description
 
