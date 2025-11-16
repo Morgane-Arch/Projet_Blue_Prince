@@ -6,13 +6,24 @@ from joueur import Joueur
 
 class AleatoireObjet : 
     """
-    Classe permettant de gérer le t'apparition des objets dans le jeu (consommaables et permanents)
+    Classe permettant de gérer le taux d'apparition des objets dans le jeu : 
+    - Le taux d'apparition des coffres/casiers/endroits à creuser
+    - Le taux d'apparition des objets consommables/mangeables/permanents
+
+    Attributs : 
+
+    - proba_base_apparition : float 
+    La probabilité initiale d'apparition des objets dans la pièce (sans influence tel que couleur de la pièce, effet des objets permanents)
+    
+    - proba_base_coffre : float
+    La probabilité d'apparition d'un coffre
+
+
     """
 
     def __init__(self) : 
         
         self.proba_base_apparition = 0.3 #Probabilite de base d'apparition des objets dans la pièce
-        self.proba_base_coffre = 0.5 #Probabilité de base d'obtenir des objets consommables dans un coffre
         self.objet_mangeables = ["pomme", "banane", "gateau", "sandwich", "repas"]
         self.objets_consommables = ["pas", "cle", "piece", "gemme", "de"]
         self.bonus_chance = 0.05 #bonus de chance par points de chance du joueur - patte de lapin, detecteur de metaux
@@ -42,6 +53,22 @@ class AleatoireObjet :
             "red": -0.15
         }
 
+
+        self.proba_objets = { "pomme": 0.15,
+                             "banane" : 0.12,
+                             "gateau" : 0.24,
+                             "sandwich" : 0.10,
+                             "repas" : 0.05, 
+                             "pas" : 0.35, 
+                             "cle" : 0.2,
+                             "piece" : 0.5,
+                             "gemme" : 0.2, 
+                             "de" : 0.4, 
+                             "casier" : 0.1, 
+                             "creuser" : 0.1,
+                             "coffre" : 0.1
+                             }
+
     # Génerer des objets présents dans les salles
     def generer_objet_salle(self, piece, joueur) : 
         """
@@ -57,7 +84,10 @@ class AleatoireObjet :
 
         for objet in piece.objets : 
 
-            proba_apparition = self.proba_base_apparition + self.bonus_chance * joueur.chance_objets + bonus_piece #Probabilite de base d'apparition des objets dans la pièce
+            #on récupère la proba propre à l'objet (s'il existe)
+            proba_type_objet = self.proba_objets.get(objet, 1.0)
+
+            proba_apparition = (self.proba_base_apparition + self.bonus_chance * joueur.chance_objets + bonus_piece)*proba_type_objet
 
             if objet in ["cle", "piece"] : #pour le detecteur des metaux
                 proba_apparition += self.bonus_chance * joueur.chance_cle_pieces 
