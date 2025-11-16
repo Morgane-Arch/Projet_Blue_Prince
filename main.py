@@ -60,7 +60,7 @@ objet_aleatoire = AleatoireObjet()
 
 # Données du jeu
 salles_affichees = random.sample(salles[2:], 3) # Séléction aléatoire initiale des 3 images de droite
-
+inventory = []
 
 # VOIR COMMENT INCLURE OBJETS PERMANENTS ICI
 #### AJOUT OBJET PERMANENY
@@ -73,7 +73,6 @@ grid = [[None for _ in range(COLS)] for _ in range(ROWS)]
 grid[8][2] = 0  # Mise en place de Entrance room sur la case du milieu du bas (0 = index de Entrance room)
 grid[0][2] = 1  # Mise en place de Antechamber sur la case du milieu du haut (1 = index de Antechamber)
 
-print("N" in salles[grid[8][2]].portes)
 
 
 
