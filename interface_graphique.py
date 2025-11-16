@@ -41,7 +41,19 @@ font = pygame.font.SysFont("arial", 20)
 ############ Définition des fonctions d'affichage ############
 
 def draw_direction_highlight(rect, direction, selected_cell):
-    """Dessine un surlignage sur le bord de la case selon la direction choisie."""
+    """
+    Dessine un surlignage coloré sur un bord de la case sélectionnée,
+    en fonction de la direction choisie (up, down, left, right).
+
+    Paramètres :
+        rect (pygame.Rect) : rectangle représentant la case dans la grille.
+        direction (str) : direction choisie ("up", "down", "left", "right").
+        selected_cell (tuple) : coordonnées (r, c) de la case sélectionnée.
+
+    Effet :
+        Dessine un trait cyan sur le bord correspondant si la case n’est pas
+        située au bord de la grille.
+    """
     margin = 4
     thickness = 6
     if direction == "up" and selected_cell[0] != 0:
@@ -59,7 +71,19 @@ def draw_direction_highlight(rect, direction, selected_cell):
     
 
 def draw_grid(selected_direction, selected_cell, grid, room_images_grid):
-    """Affiche la grille principale des salles."""
+    """
+    Affiche la grille principale du jeu ainsi que les salles déjà placées.
+
+    Paramètres :
+        selected_direction (str|None) : direction courante du joueur.
+        selected_cell (tuple) : position (r, c) du joueur.
+        grid (list[list[int|None]]) : grille contenant les indices des salles.
+        room_images_grid (list[pygame.Surface]) : images miniatures des salles.
+
+    Effet :
+        Affiche la grille complète, dessine les salles, la case sélectionnée,
+        et appelle le surlignage directionnel si nécessaire.
+    """
     for r in range(ROWS):
         for c in range(COLS):
             x = c * CELL_SIZE
@@ -82,7 +106,21 @@ def draw_grid(selected_direction, selected_cell, grid, room_images_grid):
 
 
 def draw_top_right(joueur):
-    """Affiche les infos du joueur."""
+    """
+    Affiche les informations du joueur dans le panneau supérieur droit.
+
+    Affiche :
+        - nombre de pas
+        - pièces
+        - gemmes
+        - clés
+        - dés
+        - objets permanents
+        - autres objets
+
+    Paramètres :
+        joueur : instance du joueur contenant ses inventaires et statistiques.
+    """
     x0 = LEFT_PANEL_WIDTH
     pygame.draw.rect(screen, GRAY, (x0, 0, RIGHT_PANEL_WIDTH, TOP_RIGHT_HEIGHT))
 
@@ -129,7 +167,18 @@ def draw_top_right(joueur):
             screen.blit(text, (inv_x, y_autres + 25 * (i + 1)))
 
 def draw_bottom_right(salles_affichees, salles, selected_room_index, room_images_large):
-    """Affiche 3 salles choisies aléatoirement (renouvelées après chaque placement)."""
+    """
+    Affiche le panneau inférieur droit contenant les 3 salles aléatoires proposées.
+
+    Paramètres :
+        salles_affichees (list) : les 3 salles proposées actuellement.
+        salles (list) : liste complète des salles existantes.
+        selected_room_index (int) : index de la salle actuellement surlignée.
+        room_images_large (list[pygame.Surface]) : images grandes des salles.
+
+    Effet :
+        Affiche les images, les noms, et met en surbrillance la salle sélectionnée.
+    """
     x0 = LEFT_PANEL_WIDTH
     y0 = TOP_RIGHT_HEIGHT
     pygame.draw.rect(screen, GRAY, (x0, y0, RIGHT_PANEL_WIDTH, BOTTOM_RIGHT_HEIGHT))
@@ -166,7 +215,17 @@ def draw_bottom_right(salles_affichees, salles, selected_room_index, room_images
 ############ Définition des fonctions de jeu ############
 
 def change_room_selection(key, selected_room_index, salles_affichees):
-    """Navigue dans la liste des salles affichées."""
+    """
+    Change la salle actuellement sélectionnée dans les 3 choix proposés.
+
+    Paramètres :
+        key (int) : touche appuyée (4 ou 6, pavé numérique inclus).
+        selected_room_index (int) : index actuellement choisi.
+        salles_affichees (list) : liste des 3 salles affichées.
+
+    Retour :
+        int : le nouvel index sélectionné.
+    """
     if key in (pygame.K_4, pygame.K_KP4):
         selected_room_index = (selected_room_index - 1) % len(salles_affichees)
     elif key in (pygame.K_6, pygame.K_KP6):
@@ -175,7 +234,19 @@ def change_room_selection(key, selected_room_index, salles_affichees):
 
 
 def place_room(salles_affichees, selected_room_index, selected_cell, salles, grid):
-    """Place la salle sélectionnée dans la case actuelle, puis renouvelle le choix aléatoire."""
+    """
+    Place la salle sélectionnée dans la grille.
+
+    Paramètres :
+        salles_affichees (list) : les trois salles proposées.
+        selected_room_index (int) : la salle choisie par le joueur.
+        selected_cell (tuple) : position (r, c) où placer la salle.
+        salles (list) : toutes les salles disponibles.
+        grid (list) : grille du jeu.
+
+    Retour :
+        (grid, selected_room_index) : grille mise à jour et index remis à 0.
+    """
     r, c = selected_cell
     name, _ = (salles_affichees[selected_room_index].nom, salles_affichees[selected_room_index].image)
 
@@ -190,6 +261,20 @@ def place_room(salles_affichees, selected_room_index, selected_cell, salles, gri
     return grid, selected_room_index
 
 def gestion_objets_salle(joueur, grid, salles, objet_aleatoire, PERMANENTS):
+    """
+    Gère l'apparition et la collecte des objets lorsqu'une salle est visitée.
+
+    Paramètres :
+        joueur : instance du joueur.
+        grid : grille des salles.
+        salles : liste complète des salles.
+        objet_aleatoire : gestionnaire d'objets aléatoires.
+        PERMANENTS : dictionnaire des objets permanents possibles.
+
+    Effet :
+        Ajoute automatiquement les objets trouvés dans la salle dans l'inventaire
+        du joueur selon leur type (consommable, permanent, casier, etc.).
+    """
     r, c = joueur.position
     nouvelle_piece_indice = grid[r][c]
 
