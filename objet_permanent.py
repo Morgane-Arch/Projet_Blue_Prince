@@ -1,4 +1,23 @@
 class ObjetPermanent:
+    """
+    Classe représentant un objet permanent
+
+    Paramètres : 
+        nom : str
+            Nom de l'objet permanent
+        description : str
+            Description de l'objet
+        peut_creuser : bool
+            Indique si l'objet permet de creuser, par défaut false
+        peut_briser_cadenas : bool 
+            Indique si l'objet permet de briser un cadenas, par défaut False
+        peut_ouvrir_portes : bool 
+            Indique si le joueur peut ouvrir certaines portes sans clé, par défaut False
+        chance_cle_pieces : int 
+            Bonus de chance pour trouver des clés et des pièces, par défaut 0
+        chance_objet : int
+            Bonus de chance pour trouver des objets, par défaut 0
+    """
     def __init__(self, nom, description, peut_creuser = False, peut_briser_cadenas = False,
                 peut_ouvrir_portes = False, chance_cle_pieces = 0, chance_objets = 0):
         self.peut_creuser = peut_creuser
@@ -10,6 +29,12 @@ class ObjetPermanent:
         self.description = description
 
     def appliquer(self, joueur):
+        """
+        Fonction permettant d'appliquer les effets des objets permanents au joueur 
+
+        Paramètre : 
+            joueur : Joueur
+        """
         if self.nom == "pelle":
             joueur.peut_creuser = True
 
