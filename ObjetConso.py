@@ -1,10 +1,17 @@
 class ObjetsConsommables : 
-    """ Classe représentant les objets consommables du joueur, dans son inventaire : 
-    - Pas : le nombre de pas restants
-    - Pièces : le nombre de pièces restantes 
-    - Gemmes : le nombre de gemme restantes 
-    - Clés : Le nombre de clés 
-    - Dé : Le nombre de dés en la possession du joueur
+    """ Classe représentant les objets consommables du joueur, dans son inventaire 
+
+    Paramètres :
+        pas : int
+            Le nombre de pas restants, par défaut 70
+        piece : int
+            Le nombre de pièces restantes, par défaut 0
+        gemme : int
+            Le nombre de gemme restantes, par défaut 2
+        cle : int
+            Le nombre de clés 
+        de : int
+        Le nombre de dés en la possession du joueur, par défaut 0
     """
 
     def __init__(self, pas = 70, piece = 0, gemme = 2, cle = 0, de = 0) : 
@@ -17,8 +24,12 @@ class ObjetsConsommables :
     #Permet d'ajouter un objet consommable à l'inventaire du joueur 
     def ajouter_objet(self, objet, quantite) : 
         """ Ajoute une certaine quantité d'un objet consommable à l'inventaire du joueur
-        - Objet : str ("pas", "piece", "gemme", "cle", "de") 
-        - Quantite : int : La quantité à ajouter
+
+        Paramètres : 
+            objet : str 
+            ("pas", "piece", "gemme", "cle", "de") 
+            quantite : int 
+            La quantité à ajouter
         """
         if not isinstance(objet, str) : 
             raise TypeError("Le nom de l'objet doit être une chaîne de caractère")
@@ -45,8 +56,16 @@ class ObjetsConsommables :
     #Permet de retirer un objet de l'inventaire du joueur : Il a choisit de le consommer - à marcher
     def retirer_objet(self, objet, quantite) : 
         """ Retire une certaine quantité d'un objet consommable de l'inventaire du joueur. 
-        objet : str : le type d'objet à retirer ("pas", "piece", "gemme", "cle", "de")
-        quantite : int : la quantité à retirer
+
+        Paramètres : 
+        objet : str 
+        Le type d'objet à retirer ("pas", "piece", "gemme", "cle", "de")
+        quantite : int  
+        La quantité à retirer
+
+        Return : 
+            bool 
+            Indique si le joueur peut continuer à jouer (il lui reste des pas)
         """
         if objet == "pas" : 
             if quantite != 1 : 
