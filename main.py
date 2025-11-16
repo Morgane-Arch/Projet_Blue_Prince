@@ -60,7 +60,6 @@ objet_aleatoire = AleatoireObjet()
 
 # Données du jeu
 salles_affichees = random.sample(salles[2:], 3) # Séléction aléatoire initiale des 3 images de droite
-inventory = ["Potion", "Clé d'argent"]  # Objets contenu dans l'inventaire situé à gauche, objets permanents posséder par le joueur
 
 
 # VOIR COMMENT INCLURE OBJETS PERMANENTS ICI
@@ -220,7 +219,7 @@ while True:
     # Affichage
     screen.fill(BLACK)
     draw_grid(joueur.direction, joueur.position, grid, room_images_grid)
-    draw_top_right(inventory, joueur)
+    draw_top_right(joueur)
 
     if mode_selection:
         draw_bottom_right(salles_affichees, salles, selected_room_index, room_images_large)
