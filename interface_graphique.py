@@ -173,5 +173,3 @@ def place_room(salles_affichees, selected_room_index, selected_cell, salles, gri
 
     return grid, selected_room_index
 
-
-    #salles_est = [nom for nom, piece in salles.items() if "E" in piece.portes]
