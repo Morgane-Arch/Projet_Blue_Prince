@@ -17,6 +17,9 @@ class Piece:
             Indice de rareté de la pièce 
         couleur : str
             Couleur de la pièce
+    Attributs : 
+        objets_restants : list[str]
+            Permet de gérer la non réaparition des objets une fois qu'on a visité une salle
     """
 
     def __init__(self, nom, image, portes, cout, objets, rarete, couleur):
@@ -28,7 +31,7 @@ class Piece:
         self.rarete = rarete
         self.couleur = couleur
 
-
+        self.objets_restants = objets[:]
 
     #Méthode retire_pas - pour les pièces qui ont l'attribut spécial de retirer des pas en entrant
     def retirer_pas(self, joueur):

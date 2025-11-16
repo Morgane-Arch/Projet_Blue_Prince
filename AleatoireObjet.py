@@ -25,6 +25,9 @@ class AleatoireObjet :
         - self.bonus_chance : float
         Probabilité supplémentaire donné par les objets permanents
 
+        - objets_permanents_disponibles : list[str]
+        Permet de gérer l'apparition unique des objets permanents
+
         - lot_casier : list[dict(str : int)]
         Liste des lots possibles dans le casier
 
@@ -36,7 +39,6 @@ class AleatoireObjet :
 
         - proba_objets : dict(str : float)
         La probabilité d'apparition de chaque objet (coffre/pomme/clé, etc)
-
     """
 
     def __init__(self) : 
@@ -45,6 +47,7 @@ class AleatoireObjet :
         self.objet_mangeables = ["pomme", "banane", "gateau", "sandwich", "repas"]
         self.objets_consommables = ["pas", "cle", "piece", "gemme", "de"]
         self.bonus_chance = 0.05 #bonus de chance par points de chance du joueur - patte de lapin, detecteur de metaux
+        self.objets_permanents_disponibles = list(PERMANENTS.keys()) #initialisation de la liste des objets permanents (permet de gérer l'apparition unique)
 
 
         #lot possible pour un casier -- on pourra le faire pour coffre aussi 
@@ -108,13 +111,14 @@ class AleatoireObjet :
         if not isinstance(joueur, Joueur) : 
             raise ValueError("Joueur doit être une instance de la classe joueur")
 
-
         objets_trouve = {}                                                              #tous les objets qu'on aura trouvé à la fin
 
         bonus_piece = self.proba_bonus_couleur.get(piece.couleur, 0)                    #On cherche la valeur de la probabilité associée à la pièce
 
+        objets_a_retirer = []                                                           #Liste pour les objets trouvés à retirer dans la pièce
+
         #On parcourt tous les types d'objets pouvant apparaître dans la pièce 
-        for objet in piece.objets : 
+        for objet in piece.objets_restants.copy() : 
 
             #on récupère la proba propre à l'objet - si elle n'existe pas : devient 1
             proba_type_objet = self.proba_objets.get(objet, 1.0)
@@ -131,33 +135,48 @@ class AleatoireObjet :
                 # Pour les objets permanents, on ajoute l'objet permanent correspondant
                 if objet == "permanent" : 
 
-                    #on choisit un objet permanent au hasard parmi les objets permanents disponibles
-                    nom_obj_permanent = random.choice(list(PERMANENTS.keys()))
-                    objets_trouve[nom_obj_permanent] = objets_trouve.get(nom_obj_permanent, 0) + 1
+                    if self.objets_permanents_disponibles : 
+                        #on choisit un objet permanent au hasard parmi les objets permanents disponibles
+                        nom_obj_permanent = random.choice(self.objets_permanents_disponibles)
+                        self.objets_permanents_disponibles.remove(nom_obj_permanent)      #On retire des objets permanents restants
+                        objets_trouve[nom_obj_permanent] = objets_trouve.get(nom_obj_permanent, 0) + 1
+                        objets_a_retirer.append(objet)                                      #On alimente la liste des objets à retirer
                 
-                elif objet in PERMANENTS :                                          #au cas où on n'a pas rentré 'permanent' mais le nom de l'objet permanent
-                    objets_trouve[objet] = objets_trouve.get(objet, 0) + 1
+                elif objet in PERMANENTS :                                         #au cas où on n'a pas rentré 'permanent' mais le nom de l'objet permanent
+                    if objet in self.objets_permanents_disponibles : 
+                        self.objets_permanents_disponibles.remove(objet)
+                        objets_trouve[objet] = objets_trouve.get(objet, 0) + 1
+                        objets_a_retirer.append(objet)
 
                 elif objet == "creuser" : 
                     objets_trouve["endroit_a_creuser"] = objets_trouve.get("endroit_a_creuser", 0) + 1
+                    objets_a_retirer.append(objet)
 
                 elif objet == "casier" : 
                     objets_trouve["casier"] = objets_trouve.get("casier", 0) + 1
+                    objets_a_retirer.append(objet)
                 
                 elif objet == "coffre" : 
                     objets_trouve["coffre"] = objets_trouve.get("coffre", 0) + 1
+                    objets_a_retirer.append(objet)
 
                 # Pour les objets mangeables 
                 elif objet in ["pomme", "banane", "gateau", "sandwich", "repas"] : 
                     objets_trouve[objet] = objets_trouve.get(objet, 0) + 1
+                    objets_a_retirer.append(objet)
 
                 # Pour les objets consommables : 
                 elif objet in ["pas", "cle", "piece", "gemme", "de"] :
                     objets_trouve[objet] = objets_trouve.get(objet, 0) + 1
+                    objets_a_retirer.append(objet)
 
                 #Autres     
                 else : 
                     objets_trouve[objet] = objets_trouve.get(objet, 0) + 1
+                    objets_a_retirer.append(objet)
+
+        for objet_nom in objets_a_retirer : 
+            piece.objets_restants.remove(objet_nom)          #On retire les objets des objets restants de la classe piece, à la fin elle doit être vide
 
         return objets_trouve
     
