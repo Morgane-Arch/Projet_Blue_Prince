@@ -73,13 +73,23 @@ class AleatoireObjet :
         #on stock le contenu du coffre dans un dictionnaire
         contenu = {}
 
-        # Probabilité de base d'obtenir des objets consommables
-        proba_objet_conso = self.proba_base_coffre + self.bonus_chance * joueur.chance_objets #joueur.chance_objets = 0 si pas de bonus, donc on gere les deux cas : avec patte de lapin et sans
+        #combien d'objets différents on peut avoir dans le coffre (1 à 3)
+        nb_objets_differents = random.randint(1, 3)
 
-        # Tirage aléatoire pour déterminer le contenu du coffre
-        if random.random() < proba_objet_conso:
-            objet_conso = random.choice(["pomme", "banane", "gateau", "sandwich", "repas"])
-            contenu[objet_conso] = contenu.get(objet_conso, 0) + 1
+        #objet possible dans le coffre 
+        objets_possibles = self.objets_consommables + self.objet_mangeables
+
+        #chance objet influence le nombre d'objets 
+        nb_objets_differents += joueur.chance_objets // 2  #1 objet supplémentaire tous les 2 points de chance
+        nb_objets_differents = min(nb_objets_differents, len(objets_possibles))  #on ne peut pas avoir plus d'objets différents que d'objets possibles
+
+        #tirage au sort des objets à mettre dans le coffre
+        objets_choisis = random.sample(objets_possibles, nb_objets_differents)
+
+        for objet in objets_choisis :
+            quantite = random.randint(1, 3)  #quantité entre 1 et 3
+            contenu[objet] = quantite
+
 
         return contenu
        
