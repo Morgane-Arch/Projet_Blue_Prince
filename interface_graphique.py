@@ -171,4 +171,7 @@ def place_room(salles_affichees, selected_room_index, selected_cell, salles, gri
         salles_affichees = random.sample(salles[2:], 3)
         selected_room_index = 0  # réinitialise la sélection de la salle
 
-    return grid, salles_affichees, selected_room_index
+    return grid, selected_room_index
+
+
+    #salles_est = [nom for nom, piece in salles.items() if "E" in piece.portes]

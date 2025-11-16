@@ -31,4 +31,3 @@ salles = [Entrance_Hall, Antechamber, Attic, Billiard_room, Closet, Gallery, Par
 
 
 
-#salles_est = [nom for nom, piece in salles.items() if "E" in piece.portes]

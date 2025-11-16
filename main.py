@@ -84,17 +84,21 @@ while True:
                 r, c = joueur.position
                 if joueur.direction == "up" and r > 0:
                     r -= 1
+                    if salles_affichees == []:
+                        salles_affichees = random.sample([piece for piece in salles if "S" in piece.portes],3)
                 elif joueur.direction == "down" and r < ROWS - 1:
                     r += 1
+                    if salles_affichees == []:
+                        salles_affichees = random.sample([piece for piece in salles if "N" in piece.portes],3)
                 elif joueur.direction == "left" and c > 0:
                     c -= 1
+                    if salles_affichees == []:
+                        salles_affichees = random.sample([piece for piece in salles if "E" in piece.portes],3)
                 elif joueur.direction == "right" and c < COLS - 1:
                     c += 1
-                name, _ = (salles_affichees[selected_room_index].nom, salles_affichees[selected_room_index].image)
-
-                # Trouver l'index correspondant dans room_types
-                room_index = next(idx for idx, piece in enumerate(salles) if piece.nom == name)
-
+                    if salles_affichees == []:
+                        salles_affichees = random.sample([piece for piece in salles if "W" in piece.portes],3)
+                
                 if not mode_selection and grid[r][c] == None:
                     # Passe en mode sélection
                     mode_selection = True
@@ -102,7 +106,9 @@ while True:
                 else:
                     mode_selection = False # Sortir du mode sélection
                     joueur.move_in_direction(grid)
-                    grid, salles_affichees, selected_room_index = place_room(salles_affichees, selected_room_index, joueur.position, salles, grid)
+                    grid, selected_room_index = place_room(salles_affichees, selected_room_index, joueur.position, salles, grid)
+                    salles_affichees = []
+
 
     # Affichage
     screen.fill(BLACK)
