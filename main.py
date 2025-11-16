@@ -60,13 +60,8 @@ objet_aleatoire = AleatoireObjet()
 
 # Données du jeu
 salles_affichees = random.sample(salles[2:], 3) # Séléction aléatoire initiale des 3 images de droite
-inventory = []
 
-# VOIR COMMENT INCLURE OBJETS PERMANENTS ICI
-#### AJOUT OBJET PERMANENY
-for nom_objet_de_depart in inventory :                                                   # on parcourt chaque élément de inventaire
-    if nom_objet_de_depart in PERMANENTS :                                               # si l'objet est un objet permanent
-        joueur.ajouter_objet_permanent(PERMANENTS[nom_objet_de_depart])                  # on ajoute aux objets permanents du joueur
+
 
 # Grille de gauche : chaque contient soit un index correspondant à la salle soit None (ATTENTION SI L'ON MODIFIE LA PIOCHE A CHAQUE TOUR PEUT ETRE CREER 2 LISTES)
 grid = [[None for _ in range(COLS)] for _ in range(ROWS)]
