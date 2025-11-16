@@ -1,4 +1,23 @@
 class Piece:
+    """
+    Classe représentant une pièce du manoir
+
+    Paramètres : 
+        nom : str
+            Nom de la salle
+        image : str
+            Nom du fichier qui contient l'image de la pièce 
+        portes : List[str]
+            Direction dans lesquelles la salle possède une sortie
+        cout : int 
+            Coût pour entrer dans la pièce
+        objets : list[str]
+            Liste des objets pouvant apparaître dans la salle
+        rarete : int
+            Indice de rareté de la pièce 
+        couleur : str
+            Couleur de la pièce
+    """
 
     def __init__(self, nom, image, portes, cout, objets, rarete, couleur):
         self.nom = nom
@@ -13,7 +32,11 @@ class Piece:
 
     ## Méthode retire_pas
     def retirer_pas(self, joueur):
-        """Retire des pas au joueur lorsqu'il entre dans cette pièce si l'objet est présent.
+        """
+        Fonction permettant de retirer des pas au joueur lorsqu'il entre dans une pièce qui possède cet 'objet'
+
+        Paramètre : 
+            joueur : Joueur
         """
         if "retire_pas" in self.objets:
             joueur.consommables.retirer_objet("pas", 1)
