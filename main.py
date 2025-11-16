@@ -48,38 +48,6 @@ for piece in salles:
         # Image manquante → carré violet
         img_grid = pygame.Surface((IMG_SIZE_GRID, IMG_SIZE_GRID))
         img_grid.fill((150, 0, 150))
-        img_large = pygame.Surface((IMG_SIZE_LARG_))
-
-
-
-
-############ Chargement des images des salles ############
-
-# Nom du dossier contenant les images des salles
-ROOM_IMAGE_FOLDER = "Images_salles"
-
-# Salles disponibles (FAIRE UNE PIOCHE DANS LAQUELLE ON ENLEVE DES SALLES DISPO TOUT AU LONG DE LA PARTIE)
-# Format : (nom affiché, nom_fichier)
-
-selected_room_index = 0
-
-# Chargement des images
-# Listes pour stocker les images
-room_images_grid = []   # petites images pour la grille
-room_images_large = []  # grandes images pour la sélection à droite
-
-IMG_SIZE_GRID = int(CELL_SIZE * 0.9)
-IMG_SIZE_LARGE = 160
-
-for piece in salles:
-    path = os.path.join(ROOM_IMAGE_FOLDER, piece.image)
-    if os.path.exists(path):
-        original = pygame.image.load(path).convert_alpha()
-        img_grid = pygame.transform.smoothscale(original, (IMG_SIZE_GRID, IMG_SIZE_GRID))
-        img_large = pygame.transform.smoothscale(original, (IMG_SIZE_LARGE, IMG_SIZE_LARGE))
-    else:
-        img_grid = pygame.Surface((IMG_SIZE_GRID, IMG_SIZE_GRID))
-        img_grid.fill((150, 0, 150))
         img_large = pygame.Surface((IMG_SIZE_LARGE, IMG_SIZE_LARGE))
         img_large.fill((170, 0, 170))
 
