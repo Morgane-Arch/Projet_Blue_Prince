@@ -24,7 +24,7 @@ Spare_Room = Piece("Spare Room","Spare_Room_Icon.png", ["N","S"], 0, ["repas", "
 Storeroom = Piece("Storeroom","Storeroom_Icon.png", ["S"], 0, ["permanent","pomme"], 1, "bleu")
 The_foundation = Piece("The foundation","The_Foundation_Icon.png", ["S","W","E"], 0, ["parmenant", "clé", "gemme", "repas"], 3, "bleu")
 Walk_in_closet = Piece("Walk in closet","Walk-in_Closet_Icon.png", ["S"], 0, ["parmenant", "parmenant"], 3, "bleu")
-
+Locker_room = Piece("Locker room","Locker_Room_Icon.png", ["N","S"], 0, [], 3, "bleu")
 
 
 salles = [Entrance_Hall, Antechamber, Attic, Billiard_room, Closet, Gallery, Parlor, Room_8, Rotunda, Spare_Room, Storeroom, The_foundation, Walk_in_closet]
