@@ -16,26 +16,19 @@ ROOM_IMAGE_FOLDER = "Images_salles"
 
 # Salles disponibles (FAIRE UNE PIOCHE DANS LAQUELLE ON ENLEVE DES SALLES DISPO TOUT AU LONG DE LA PARTIE)
 # Format : (nom affiché, nom_fichier)
-room_types = [
-    ("Entrance Hall", "Entrance_Hall_Icon.png"),
-    ("Antechamber", "Antechamber_Icon.png"),
-    ("The Foundation", "The_Foundation_Icon.png"),
-    ("Spare Room", "Spare_Room_Icon.png"),
-    ("Rotunda", "Rotunda_Icon.png"),
-    ("Attic", "Attic_Icon.png"),
-    ("Billiard Room", "Billiard_Room_Icon.png")
-]
+
 selected_room_index = 0
 
 # Chargement des images
+# Listes pour stocker les images
 room_images_grid = []   # petites images pour la grille
 room_images_large = []  # grandes images pour la sélection à droite
 
-IMG_SIZE_GRID = int(CELL_SIZE * 0.9)  # ~72px si CELL_SIZE=80
-IMG_SIZE_LARGE = 160                  # affichage à droite
+IMG_SIZE_GRID = int(CELL_SIZE * 0.9)
+IMG_SIZE_LARGE = 160
 
-for name, filename in room_types:
-    path = os.path.join(ROOM_IMAGE_FOLDER, filename)
+for piece in salles:
+    path = os.path.join(ROOM_IMAGE_FOLDER, piece.image)
     if os.path.exists(path):
         original = pygame.image.load(path).convert_alpha()
         img_grid = pygame.transform.smoothscale(original, (IMG_SIZE_GRID, IMG_SIZE_GRID))
@@ -45,7 +38,7 @@ for name, filename in room_types:
         img_grid.fill((150, 0, 150))
         img_large = pygame.Surface((IMG_SIZE_LARGE, IMG_SIZE_LARGE))
         img_large.fill((170, 0, 170))
-    
+
     room_images_grid.append(img_grid)
     room_images_large.append(img_large)
 
@@ -59,7 +52,7 @@ for name, filename in room_types:
 joueur = Joueur([8, 2]) # création d'un joueur à la position initiale [8,2]
 
 # Données du jeu
-salles_affichees = random.sample(room_types[2:], 3) # Séléction aléatoire initiale des 3 images de droite
+salles_affichees = random.sample(salles[2:], 3) # Séléction aléatoire initiale des 3 images de droite
 inventory = ["Potion", "Clé d'argent"]  # Objets contenu dans l'inventaire situé à gauche, objets permanents posséder par le joueur
 # VOIR COMMENT INCLURE OBJETS PERMANENTS ICI
 
@@ -97,20 +90,19 @@ while True:
                     c -= 1
                 elif joueur.direction == "right" and c < COLS - 1:
                     c += 1
-                name, _ = salles_affichees[selected_room_index]
+                name, _ = (salles_affichees[selected_room_index].nom, salles_affichees[selected_room_index].image)
 
                 # Trouver l'index correspondant dans room_types
-                room_index = next(idx for idx, (n, f) in enumerate(room_types) if n == name)
+                room_index = next(idx for idx, piece in enumerate(salles) if piece.nom == name)
 
                 if not mode_selection and grid[r][c] == None:
                     # Passe en mode sélection
                     mode_selection = True
-                    draw_bottom_right(salles_affichees, room_types, selected_room_index, room_images_large)
+                    draw_bottom_right(salles_affichees, salles, selected_room_index, room_images_large)
                 else:
-                    # Sortir du mode sélection
-                    mode_selection = False
+                    mode_selection = False # Sortir du mode sélection
                     joueur.move_in_direction(grid)
-                    grid, salles_affichees, selected_room_index = place_room(salles_affichees, selected_room_index, joueur.position, room_types, grid)
+                    grid, salles_affichees, selected_room_index = place_room(salles_affichees, selected_room_index, joueur.position, salles, grid)
 
     # Affichage
     screen.fill(BLACK)
@@ -118,7 +110,7 @@ while True:
     draw_top_right(inventory, joueur)
 
     if mode_selection:
-        draw_bottom_right(salles_affichees, room_types, selected_room_index, room_images_large)
+        draw_bottom_right(salles_affichees, salles, selected_room_index, room_images_large)
 
     
     pygame.display.flip()

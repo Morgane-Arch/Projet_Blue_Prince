@@ -53,13 +53,13 @@ class Joueur:
 
     def move_in_direction(self, grid):
         """Déplace la sélection dans la direction choisie."""
-        
-        #### Fonction modifiée, regarder ancien commit si pas validé
 
         r, c = self.position #rows, columns
         new_r, new_c = r, c #nouvelle position
 
-        #Test pour vois si on peut adopter la position (si on est au bout de la grille)
+        
+
+        #Test pour voir si on peut adopter la position (si on est au bout de la grille)
         if self.direction == "up" and r > 0 : 
             new_r -= 1
         elif self.direction == "down" and r < ROWS - 1 : 
@@ -70,7 +70,7 @@ class Joueur:
         elif self.direction == "right" and c < COLS - 1:
             new_c += 1
 
-        #Si la position a vraiment changé (pas coincé par un bord par exemple)
+        #Si la position a vraiment changé (pas coincé par un bord par exemple)²
         if (new_r, new_c) != (r, c) :
             encore_en_vie = self.consommables.retirer_objet("pas", 1) #on retire le pas
 

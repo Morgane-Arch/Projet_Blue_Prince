@@ -112,7 +112,7 @@ def draw_top_right(inventory, joueur):
         screen.blit(item_text, (inv_x, inv_y + 25 * (i + 1)))
 
 
-def draw_bottom_right(salles_affichees, room_types, selected_room_index, room_images_large):
+def draw_bottom_right(salles_affichees, salles, selected_room_index, room_images_large):
     """Affiche 3 salles choisies aléatoirement (renouvelées après chaque placement)."""
     x0 = LEFT_PANEL_WIDTH
     y0 = TOP_RIGHT_HEIGHT
@@ -126,9 +126,11 @@ def draw_bottom_right(salles_affichees, room_types, selected_room_index, room_im
     start_x = x0 + 40
     base_y = y0 + 60
 
-    for i, (name, filename) in enumerate(salles_affichees):
+    for i, piece in enumerate(salles_affichees):
+        name = piece.nom
+        filename = piece.image
         # Trouver l'index correspondant pour afficher la bonne image
-        room_index = next(idx for idx, (n, f) in enumerate(room_types) if n == name)
+        room_index = next(idx for idx, piece in enumerate(salles) if piece.nom == name)
 
         x = start_x + i * spacing
 
@@ -156,17 +158,17 @@ def change_room_selection(key, selected_room_index, salles_affichees):
     return selected_room_index
 
 
-def place_room(salles_affichees, selected_room_index, selected_cell, room_types, grid):
+def place_room(salles_affichees, selected_room_index, selected_cell, salles, grid):
     """Place la salle sélectionnée dans la case actuelle, puis renouvelle le choix aléatoire."""
     r, c = selected_cell
-    name, _ = salles_affichees[selected_room_index]
+    name, _ = (salles_affichees[selected_room_index].nom, salles_affichees[selected_room_index].image)
 
     # Trouver l'index correspondant dans room_types
-    room_index = next(idx for idx, (n, f) in enumerate(room_types) if n == name)
+    room_index = next(idx for idx, piece in enumerate(salles) if piece.nom == name)
     if grid[r][c] == None :
         grid[r][c] = room_index
         # Nouveau tirage des salles aléatoire
-        salles_affichees = random.sample(room_types[2:], 3)
+        salles_affichees = random.sample(salles[2:], 3)
         selected_room_index = 0  # réinitialise la sélection de la salle
 
     return grid, salles_affichees, selected_room_index
