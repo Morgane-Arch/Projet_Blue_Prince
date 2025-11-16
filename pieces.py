@@ -30,7 +30,7 @@ class Piece:
 
 
 
-    ## Méthode retire_pas
+    #Méthode retire_pas - pour les pièces qui ont l'attribut spécial de retirer des pas en entrant
     def retirer_pas(self, joueur):
         """
         Fonction permettant de retirer des pas au joueur lorsqu'il entre dans une pièce qui possède cet 'objet'
@@ -42,7 +42,7 @@ class Piece:
             joueur.consommables.retirer_objet("pas", 1)
             print(f"La pièce {self.nom} retire un pas supplémentaire au joueur.")
 
-
+# Définition de chaque pièce en fonction de tous leurs paramètres
 Antechamber = Piece("Antechamber", "Antechamber_Icon.png", ["N","S","E","W"], 0, [], 0, "bleu")
 Attic = Piece("Attic", "Attic_Icon.png", ["S"], 0, ["gemme","cle", "coffre"], 0, "bleu")
 Billiard_room = Piece("Billiard room", "Billiard_Room_Icon.png", ["S","W"], 2, ["gemme","gateau","permanent", "coffre"], 2, "bleu")
@@ -81,6 +81,7 @@ Nursery = Piece("Nursery", "Nursery_Icon.png", ["S"], 1, ["pas"], 1, "purple")
 Patio = Piece("Patio", "Patio_Icon.png", ["W","S"], 1, ["gemme","permanent", "creuser", "coffre"], 1, "green")
 Veranda = Piece("Veranda", "Veranda_Icon.png", ["N","S"], 1, ["gemme","permanent", "coffre"], 1, "green")
 
+#Liste du nom de toutes les salles
 salles = [
     Entrance_Hall,
     Antechamber,

@@ -50,6 +50,9 @@ class ObjetPermanent:
         elif self.nom == "patte_de_lapin":
             joueur.chance_objets += 1
 
+
+# Dictionnaire permettant de regrouper tous les objets permanents
+# On associe un nom à une instance d'ObjetPermanent
 PERMANENTS = {
     "pelle": ObjetPermanent(
         "pelle",
