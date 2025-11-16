@@ -1,4 +1,8 @@
-from interface_graphique import *
+from interface_graphique import (
+    draw_grid, draw_top_right, draw_bottom_right,
+    change_room_selection, place_room, gestion_objets_salle
+)
+
 from joueur import Joueur
 from pieces import *
 import pygame
@@ -103,21 +107,8 @@ while True:
                         joueur.move_in_direction(grid)
                         grid, selected_room_index = place_room(salles_affichees, selected_room_index, joueur.position, salles, grid)
 
-                        ###### AJOUT (pour chaque bloc de déplacement)
-                        #ajout des objets aléatoires dans la salle
-                        nouvelle_piece_indice = grid[joueur.position[0]][joueur.position[1]]                # On récupère l'indice de la nouvelle pièce
-                        if nouvelle_piece_indice is not None:                                               # On vérifie que la pièce existe    
-                            nouvelle_piece = salles[nouvelle_piece_indice]                                  # On récupère la nouvelle pièce
-                            objets_trouve = objet_aleatoire.generer_objet_salle(nouvelle_piece, joueur)     # On génère les objets aléatoires dans la salle
-                            if objets_trouve :                                                              # Si on a trouvé des objets (dictinnaire non vide)
-                                print(f"Objets trouvés dans la salle {nouvelle_piece.nom} : {objets_trouve}")           # Affichage
-                                for nom_objet, quantite in objets_trouve.items():                                       # Pour chaque objet trouvé  
-                                    if nom_objet in ["cle", "de", "pas", "piece", "gemme"]:                             # Si l'objet est consommable       
-                                        joueur.consommables.ajouter_objet(nom_objet, quantite)                          # On l'ajoute aux consommables du joueur
-                                        inventory.append(f"{nom_objet.capitalize()} x{quantite}")                       # Affichage dans l'inventaire
-                                    elif nom_objet in PERMANENTS :                                                      # Si l'objet est permanent      
-                                        joueur.ajouter_objet_permanent(PERMANENTS[nom_objet])                           # On l'ajoute aux objets permanents du joueur
-                                        inventory.append(PERMANENTS[nom_objet].nom)                                     # On l'ajoute à l'inventaire pour l'affichage   
+                        gestion_objets_salle()
+                                 
                         salles_affichees = []
 
                 elif joueur.direction == "down" and r < ROWS - 1 and "S" in salles[grid[r][c]].portes:
@@ -143,10 +134,10 @@ while True:
                                 for nom_objet, quantite in objets_trouve.items():                                       # Pour chaque objet trouvé  
                                     if nom_objet in ["cle", "de", "pas", "piece", "gemme"]:                             # Si l'objet est consommable       
                                         joueur.consommables.ajouter_objet(nom_objet, quantite)                          # On l'ajoute aux consommables du joueur
-                                        inventory.append(f"{nom_objet.capitalize()} x{quantite}")                       # Affichage dans l'inventaire
+                                                  
                                     elif nom_objet in PERMANENTS :                                                      # Si l'objet est permanent      
                                         joueur.ajouter_objet_permanent(PERMANENTS[nom_objet])                           # On l'ajoute aux objets permanents du joueur
-                                        inventory.append(PERMANENTS[nom_objet].nom) 
+               
                         salles_affichees = []
 
                 elif joueur.direction == "left" and c > 0 and "W" in salles[grid[r][c]].portes:
@@ -172,10 +163,10 @@ while True:
                                 for nom_objet, quantite in objets_trouve.items():                                       # Pour chaque objet trouvé  
                                     if nom_objet in ["cle", "de", "pas", "piece", "gemme"]:                             # Si l'objet est consommable       
                                         joueur.consommables.ajouter_objet(nom_objet, quantite)                          # On l'ajoute aux consommables du joueur
-                                        inventory.append(f"{nom_objet.capitalize()} x{quantite}")                       # Affichage dans l'inventaire
+                                                
                                     elif nom_objet in PERMANENTS :                                                      # Si l'objet est permanent      
                                         joueur.ajouter_objet_permanent(PERMANENTS[nom_objet])                           # On l'ajoute aux objets permanents du joueur
-                                        inventory.append(PERMANENTS[nom_objet].nom) 
+                              
                         salles_affichees = []
 
                 elif joueur.direction == "right" and c < COLS - 1 and "E" in salles[grid[r][c]].portes:
@@ -201,10 +192,10 @@ while True:
                                 for nom_objet, quantite in objets_trouve.items():                                       # Pour chaque objet trouvé  
                                     if nom_objet in ["cle", "de", "pas", "piece", "gemme"]:                             # Si l'objet est consommable       
                                         joueur.consommables.ajouter_objet(nom_objet, quantite)                          # On l'ajoute aux consommables du joueur
-                                        inventory.append(f"{nom_objet.capitalize()} x{quantite}")                       # Affichage dans l'inventaire
+                                                   # Affichage dans l'inventaire
                                     elif nom_objet in PERMANENTS :                                                      # Si l'objet est permanent      
                                         joueur.ajouter_objet_permanent(PERMANENTS[nom_objet])                           # On l'ajoute aux objets permanents du joueur
-                                        inventory.append(PERMANENTS[nom_objet].nom) 
+                              
                         salles_affichees = []
                 
                 
