@@ -101,16 +101,32 @@ def draw_top_right(inventory, joueur):
     screen.blit(keys_text, (right_margin - keys_text.get_width(), 100))
     screen.blit(des_text, (right_margin - des_text.get_width(), 130))
 
-    # --- Inventaire (à gauche, inchangé) ---
+    # Objets permanents
     inv_x = x0 + 10
     inv_y = 10
-    inv_title = font.render("Inventaire :", True, WHITE)
+    inv_title = font.render("Objets permanents:", True, WHITE)
     screen.blit(inv_title, (inv_x, inv_y))
 
-    for i, item in enumerate(inventory):
-        item_text = font.render(f"  - {item}", True, WHITE)
-        screen.blit(item_text, (inv_x, inv_y + 25 * (i + 1)))
+    if not joueur.objets_permanents:
+        empty_text = font.render("Aucun objet", True, WHITE)
+        screen.blit(empty_text, (inv_x, inv_y + 25))
+        
+    else:
+        for i, obj in enumerate(joueur.objets_permanents):
+            text = font.render(f"  - {obj.nom}", True, WHITE)
+            screen.blit(text, (inv_x, inv_y + 25 * (i + 1)))
 
+    # --- Autres objets ---
+    y_autres = inv_y + 25 * (len(joueur.objets_permanents) + 3)
+    label_autres = font.render("Autres objets :", True, WHITE)
+    screen.blit(label_autres, (inv_x, y_autres))
+
+    if not joueur.autres_objets:
+        screen.blit(font.render("Aucun", True, WHITE), (inv_x, y_autres + 25))
+    else:
+        for i, obj in enumerate(joueur.autres_objets):
+            text = font.render(f"  - {obj}", True, WHITE)
+            screen.blit(text, (inv_x, y_autres + 25 * (i + 1)))
 
 def draw_bottom_right(salles_affichees, salles, selected_room_index, room_images_large):
     """Affiche 3 salles choisies aléatoirement (renouvelées après chaque placement)."""
