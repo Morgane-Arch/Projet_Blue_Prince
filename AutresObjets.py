@@ -91,7 +91,7 @@ class AutresObjets :
                     return
 
             #Un coffre ne peut jamais etre vide d apres la consigne. Alors on met une condition 
-            if self.nom_objet == "coffre" and self.contenu == None :
+            if self.nom_objet == "coffre" and (self.contenu == None or self.contenu == {}) :
                 raise ValueError("un coffre ne peut pas etre vide !")
             
             #une fois qu'on a passé toutes les conditions, on peut ouvrir l'objet 
@@ -101,40 +101,25 @@ class AutresObjets :
 
             else:
                 print(f"Bonne nouvelle ! Le {self.nom_objet} contient : {self.contenu}")
-                self.est_utilise = True
+                
+                #maintenant on gère les dictionnaires - donc on converti les contenus en dictionnaire
+                if not isinstance(self.contenu, dict) :
+                    self.contenu = {self.contenu: 1} 
 
-                # si le contenu est un objetconsommable, on l'ajoute à l'inventaire du joueur
-                if isinstance(self.contenu, ObjetsConsommables):
-                    joueur.consommables.ajouter_objet("pas", self.contenu.pas)
-                    joueur.consommables.ajouter_objet("piece", self.contenu.piece)
-                    joueur.consommables.ajouter_objet("gemme", self.contenu.gemme)
-                    joueur.consommables.ajouter_objet("cle", self.contenu.cle)
-                    joueur.consommables.ajouter_objet("de", self.contenu.de)
+                #Parcourt du dictionnaire des contenus
+                for nom_objet, quantite in self.contenu.items() : 
 
-                # si le contenu est un SEUL objet mangeable
-                elif self.contenu in ["pomme", "banane", "gateau", "sandwich", "repas"] : 
-                    contenu = AutresObjets(self.contenu, None)
-                    contenu.utiliser_objet_mangeable(joueur) #nécessaire car sans continu, le joueur va vouloir consommer un coffre
+                    # Cas 1 : Si le contenu est un objet consommable
+                    if nom_objet in ["pas", "piece", "gemme", "cle", "de"] :
+                        joueur.consommables.ajouter_objet(nom_objet, quantite)
 
-                #si la contenu est une liste d'objets 
-                elif isinstance(self.contenu, list) : 
-                    for objet_mix in self.contenu : 
-                        if objet_mix in ["pomme", "banane", "gateau", "sandwich", "repas"] : #cas d'objets mangeables
-                            contenu = AutresObjets(objet_mix, None)
+                    # Cas 2 : si le contenu est mangeable : 
+                    elif nom_objet in ["pomme", "banane", "gateau", "sandwich", "repas"] : 
+                        for i in range(quantite) : 
+                            contenu = AutresObjets(nom_objet, None)
                             contenu.utiliser_objet_mangeable(joueur) #le joueur utilise le contenu 
-                        elif isinstance(objet_mix, ObjetsConsommables) :  #cas d'objets consommables
-                            joueur.consommables.ajouter_objet("pas", objet_mix.pas)
-                            joueur.consommables.ajouter_objet("piece", objet_mix.piece)
-                            joueur.consommables.ajouter_objet("gemme", objet_mix.gemme)
-                            joueur.consommables.ajouter_objet("cle", objet_mix.cle)
-                            joueur.consommables.ajouter_objet("de", objet_mix.de)
-                        else : 
-                            print(f"L'objet {objet_mix} n'est pas mangeable et pas consommable.")
 
+                    else : 
+                        print(f"L'objet {nom_objet} n'est pas mangeable et pas consommable.")
 
- 
-
-
-
-        
-       
+                self.est_utilise = True
