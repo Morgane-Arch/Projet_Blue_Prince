@@ -88,12 +88,18 @@ def draw_top_right(inventory, joueur):
 
     # --- Texte des compteurs ---
     steps_text = font.render(f"Pas : {joueur.consommables.pas}", True, WHITE)
+    pieces_text = font.render(f"Pièces : {joueur.consommables.piece}", True, WHITE)
+    gemme_text = font.render(f"Gemmes : {joueur.consommables.gemme}", True, WHITE)
     keys_text = font.render(f"Clés : {joueur.consommables.cle}", True, WHITE)
+    des_text = font.render(f"Dés : {joueur.consommables.de}", True, WHITE)
 
     # Position alignée à droite
     right_margin = WIDTH - 20
     screen.blit(steps_text, (right_margin - steps_text.get_width(), 10))
-    screen.blit(keys_text, (right_margin - keys_text.get_width(), 40))
+    screen.blit(pieces_text, (right_margin - pieces_text.get_width(), 40))
+    screen.blit(gemme_text, (right_margin - gemme_text.get_width(), 70))
+    screen.blit(keys_text, (right_margin - keys_text.get_width(), 100))
+    screen.blit(des_text, (right_margin - des_text.get_width(), 130))
 
     # --- Inventaire (à gauche, inchangé) ---
     inv_x = x0 + 10
@@ -139,4 +145,28 @@ def draw_bottom_right(salles_affichees, room_types, selected_room_index, room_im
         screen.blit(text_img, text_rect)
 
 
+############ Définition des fonctions de jeu (A INCLURE DANS LES CLASSES JOUEUR ET PIECE ?) ############
 
+def change_room_selection(key, selected_room_index, salles_affichees):
+    """Navigue dans la liste des salles affichées."""
+    if key in (pygame.K_4, pygame.K_KP4):
+        selected_room_index = (selected_room_index - 1) % len(salles_affichees)
+    elif key in (pygame.K_6, pygame.K_KP6):
+        selected_room_index = (selected_room_index + 1) % len(salles_affichees)
+    return selected_room_index
+
+
+def place_room(salles_affichees, selected_room_index, selected_cell, room_types, grid):
+    """Place la salle sélectionnée dans la case actuelle, puis renouvelle le choix aléatoire."""
+    r, c = selected_cell
+    name, _ = salles_affichees[selected_room_index]
+
+    # Trouver l'index correspondant dans room_types
+    room_index = next(idx for idx, (n, f) in enumerate(room_types) if n == name)
+    if grid[r][c] == None :
+        grid[r][c] = room_index
+        # Nouveau tirage des salles aléatoire
+        salles_affichees = random.sample(room_types[2:], 3)
+        selected_room_index = 0  # réinitialise la sélection de la salle
+
+    return grid, salles_affichees, selected_room_index

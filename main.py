@@ -1,5 +1,6 @@
 from interface_graphique import *
 from joueur import Joueur
+from pieces import *
 import pygame
 import sys
 import os
@@ -70,31 +71,55 @@ grid[0][2] = 1  # Mise en place de Antechamber sur la case du milieu du haut (1 
 
 
 
-
 ############ Boucle de jeu ############
 
 # Boucle principale
+mode_selection = False
+
 while True:
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
         elif event.type == pygame.KEYDOWN:
-            if event.key in (pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT):
+            if event.key in (pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT) and mode_selection==False:
                 joueur.set_direction(event.key)
             elif event.key in (pygame.K_4, pygame.K_6, pygame.K_KP4, pygame.K_KP6):
                 selected_room_index = change_room_selection(event.key, selected_room_index, salles_affichees)
             elif event.key in (pygame.K_RETURN, pygame.K_KP_ENTER):
-                joueur.move_in_direction(grid)
-                grid, salles_affichees, selected_room_index = place_room(salles_affichees, selected_room_index, joueur.position, room_types, grid)
+                r, c = joueur.position
+                if joueur.direction == "up" and r > 0:
+                    r -= 1
+                elif joueur.direction == "down" and r < ROWS - 1:
+                    r += 1
+                elif joueur.direction == "left" and c > 0:
+                    c -= 1
+                elif joueur.direction == "right" and c < COLS - 1:
+                    c += 1
+                name, _ = salles_affichees[selected_room_index]
 
-                
+                # Trouver l'index correspondant dans room_types
+                room_index = next(idx for idx, (n, f) in enumerate(room_types) if n == name)
+
+                if not mode_selection and grid[r][c] == None:
+                    # Passe en mode sélection
+                    mode_selection = True
+                    draw_bottom_right(salles_affichees, room_types, selected_room_index, room_images_large)
+                else:
+                    # Sortir du mode sélection
+                    mode_selection = False
+                    joueur.move_in_direction(grid)
+                    grid, salles_affichees, selected_room_index = place_room(salles_affichees, selected_room_index, joueur.position, room_types, grid)
 
     # Affichage
     screen.fill(BLACK)
     draw_grid(joueur.direction, joueur.position, grid, room_images_grid)
     draw_top_right(inventory, joueur)
-    draw_bottom_right(salles_affichees, room_types, selected_room_index, room_images_large)
 
+    if mode_selection:
+        draw_bottom_right(salles_affichees, room_types, selected_room_index, room_images_large)
+
+    
     pygame.display.flip()
     clock.tick(30)

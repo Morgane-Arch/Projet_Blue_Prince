@@ -53,6 +53,7 @@ class Joueur:
 
     def move_in_direction(self, grid):
         """Déplace la sélection dans la direction choisie."""
+        
         #### Fonction modifiée, regarder ancien commit si pas validé
 
         r, c = self.position #rows, columns
@@ -63,6 +64,7 @@ class Joueur:
             new_r -= 1
         elif self.direction == "down" and r < ROWS - 1 : 
             new_r += 1
+
         elif self.direction == "left" and c > 0:
             new_c -= 1
         elif self.direction == "right" and c < COLS - 1:

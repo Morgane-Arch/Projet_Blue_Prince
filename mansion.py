@@ -1,21 +1,9 @@
 import random
-from pieces import salles 
+from pieces import *
 from objet_permanent import PERMANENTS
 
 class Mansion:
     def __init__(self):
-        self.rows = 9
-        self.cols = 5
-
-        # un map de 9x5
-        self.grid = [[None for _ in range(self.cols)] for _ in range(self.rows)]
-
-        self.grid = [[None for _ in range(self.cols)] for _ in range(self.rows)]
-
-        # on commence par la case au milieu
-        self.selected_cell = [4, 2]
-
-        self.selected_direction = None
 
         # on introduit toutes les salles qu'on a
         self.room_types = [(nom, piece.image) for nom, piece in salles.items()]
@@ -24,18 +12,19 @@ class Mansion:
         self.salles_affichees = random.sample(self.room_types[2:], 3)
         self.selected_room_index = 0
 
-        def Afficher_nom_salle(self):
-            """Obtenir le nom de la salle actuelle"""
-            r, c = self.selected_cell
-            if self.grid[r][c] is None:
-                return None
-            nom = self.room_types[self.grid[r][c]][0]
-            return salles[nom]
+
+    def nom_salle_actuelle(self,joueur,grid):
+        """Obtenir le nom de la salle actuelle"""
+        r, c = joueur.position
+        if grid[r][c] is None:
+            return None
+        nom = self.room_types[grid[r][c]][0]
+        return salles[nom]
 
 
+    def tirage_de_salle(self,joueur):
 
-    def set_direction(self, direction):
-        self.selected_direction = direction
+
 
 
    
