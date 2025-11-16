@@ -1,0 +1,4 @@
+# Télécharger tout les fichiers de git
+# puis lancer dans le terminal :
+
+python .\main.py
