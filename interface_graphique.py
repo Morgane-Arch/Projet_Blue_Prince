@@ -190,17 +190,15 @@ def place_room(salles_affichees, selected_room_index, selected_cell, salles, gri
     return grid, selected_room_index
 
 def gestion_objets_salle():
-    """Gèrer tous les objets trouvés dans la salle actuelle."""
     r, c = joueur.position
     nouvelle_piece_indice = grid[r][c]
 
     if nouvelle_piece_indice is None:
         return
 
-    nouvelle_piece = salles[nouvelle_piece_indice]
+    piece = salles[nouvelle_piece_indice]
 
-    # Génération des objets trouvés dans la salle
-    objets_trouve = objet_aleatoire.generer_objet_salle(nouvelle_piece, joueur)
+    objets_trouve = objet_aleatoire.generer_objet_salle(piece, joueur)
     if not objets_trouve:
         return
 
@@ -210,13 +208,32 @@ def gestion_objets_salle():
         if nom_objet in ["cle", "de", "pas", "piece", "gemme"]:
             joueur.consommables.ajouter_objet(nom_objet, quantite)
 
-        # --- Objets permanents ---
+        # --- Permanents ---
         elif nom_objet in PERMANENTS:
             joueur.ajouter_objet_permanent(PERMANENTS[nom_objet])
 
-        # --- Autres objets ---
+        # --- Casier ---
+        elif nom_objet == "casier":
+            contenu = objet_aleatoire.contenu_casier(piece, joueur)
+            print("Casier trouvé :", contenu)
+            for obj, q in contenu.items():
+                joueur.consommables.ajouter_objet(obj, q)
+
+        # --- Endroit à creuser ---
+        elif nom_objet == "endroit_a_creuser":
+            contenu = objet_aleatoire.contenu_endroit_a_creuser(joueur)
+            print("Endroit à creuser trouvé :", contenu)
+            for obj, q in contenu.items():
+                joueur.consommables.ajouter_objet(obj, q)
+
+        # --- Coffre ---
+        elif nom_objet == "coffre":
+            contenu = objet_aleatoire.contenu_coffre(joueur)
+            print("Coffre trouvé :", contenu)
+            for obj, q in contenu.items():
+                joueur.consommables.ajouter_objet(obj, q)
+
+        # --- Autres objets normaux ---
         else:
             joueur.autres_objets.append(nom_objet)
-
-
 
