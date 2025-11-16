@@ -6,7 +6,7 @@ class AutresObjets :
     Classe représentant les autres objets que le joueur peut posséder : des objets différents de consommables et permanents
     Par exemple, des pommes, des coffres....
     
-    Attribut : 
+    Paramètres : 
         - nom_objet : str
         Le nom de l'objet (pomme, banane, gateau, sandiwch, repas, coffre, casier, endroit_à_creuser)
         - contenu : str 

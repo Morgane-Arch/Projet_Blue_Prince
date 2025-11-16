@@ -4,11 +4,43 @@ from interface_graphique import ROWS, COLS
 import pygame
 from pieces import salles
 
-
-
-
-
 class Joueur:
+    """
+    Classe permettant de représenter le joueur dans le jeu : par sa position son inventaire 
+
+    Paramètres : 
+        position_depart : tuple(int, int)
+        Position initiale du joueur sur la grille, représenté par ligne et colonne
+
+    Attributs : 
+        position : tuple(int, int)
+        direction : str
+        Direction de déplacement du joueur
+
+        consommables : ObjetsConsommables
+        Inventaire contenant les objets consommables (clé, gemme, etc)
+
+        objet_permanents : list[ObjetPermanent]
+        Liste des objets permanents que le joueur a
+
+        autres_objets : list[]
+        Inventaire pour les autres objets
+
+        peut_creuser : bool
+        Indique si le joueur a une pelle pour creuser (objet permanent)
+
+        peut_briser_cadenas_coffre : bool 
+        Indique si le joueur a un marteau
+
+        peut_ouvrir_portes : bool 
+        Indique le joueur a le kit de crochetage
+
+        chance_cle_pieces = int
+        Indique la chance d'obtenir des clés et des pièces (dépendance à l'objet permanent détecteur de métaux)
+
+        chance_objets : int 
+        Indique la chance d'obtenir des objets dans les pièces (dépendance à l'objet permanent patte de lapin)
+    """
 
     def __init__(self, position_depart):
         self.position = position_depart # Initialise la position du joueur
@@ -18,7 +50,7 @@ class Joueur:
         self.objets_permanents = [] # Inventaire objets permanents 
         self.autres_objets = []
 
-        # effets liés aux objets permanents
+        #Effets liés aux objets permanents
         self.peut_creuser = False
         self.peut_briser_cadenas_coffre = False
         self.peut_ouvrir_portes = False
@@ -26,13 +58,22 @@ class Joueur:
         self.chance_cle_pieces = 0
         self.chance_objets = 0
 
-    # ajouter un objet permanent 
+    # Ajouter un objet permanent 
     def ajouter_objet_permanent(self, objet: ObjetPermanent):
+        """
+        Fonction permettant d'ajouter un objet permanent à l'inventaire du joueur et d'appliquer ses effets
+
+        Paramètre : 
+            objet : ObjetPermanent
+        """
         self.objets_permanents.append(objet)
         objet.appliquer(self)
 
-    # affichage 
+    # Affichage 
     def afficher_objets_permanents(self):
+        """
+        Fonction permettant d'afficher les objets permanents dans l'inventaire
+        """
         print("Objets permanents :")
         if not self.objets_permanents:
             print("Aucun objet permanent.")
@@ -44,7 +85,12 @@ class Joueur:
     ############## Fonctions de Déplacements du joueur ##############
 
     def set_direction(self, key):
-        """Change la direction mise en surbrillance sans bouger."""
+        """Change la direction mise en surbrillance sans bouger.
+        
+        Paramètres : 
+            key : int
+            Code de la touche pressée par l'utilisateur
+        """
         if key == pygame.K_UP:
             self.direction = "up"
         elif key == pygame.K_DOWN:
@@ -74,7 +120,7 @@ class Joueur:
         elif self.direction == "right" and c < COLS - 1:
             new_c += 1
 
-        #Si la position a vraiment changé (pas coincé par un bord par exemple)²
+        #Si la position a vraiment changé (pas coincé par un bord par exemple)
         if (new_r, new_c) != (r, c) :
             encore_en_vie = self.consommables.retirer_objet("pas", 1) #on retire le pas
 
@@ -86,6 +132,7 @@ class Joueur:
         #mise à jour de la position
         self.position = (new_r, new_c)
 
+#### à revoir : l'effet de la salle avec retire_pas
         # on applique l effet de la salle 
         #salle = salles[grid[new_r][new_c]]
         #salle.retirer_pas(self)

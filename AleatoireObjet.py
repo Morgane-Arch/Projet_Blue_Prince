@@ -36,6 +36,7 @@ class AleatoireObjet :
 
         - proba_objets : dict(str : float)
         La probabilité d'apparition de chaque objet (coffre/pomme/clé, etc)
+
     """
 
     def __init__(self) : 
