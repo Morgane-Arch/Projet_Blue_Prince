@@ -11,6 +11,15 @@ class Piece:
 
 
 
+    ## Méthode retire_pas
+    def retirer_pas(self, joueur):
+        """Retire des pas au joueur lorsqu'il entre dans cette pièce si l'objet est présent.
+        """
+        if "retire_pas" in self.objets:
+            joueur.consommables.retirer_objet("pas", 1)
+            print(f"La pièce {self.nom} retire un pas supplémentaire au joueur.")
+
+
 Antechamber = Piece("Antechamber", "Antechamber_Icon.png", ["N","S","E","W"], 0, [], 0, "bleu")
 Attic = Piece("Attic", "Attic_Icon.png", ["S"], 0, ["gemme","cle", "coffre"], 0, "bleu")
 Billiard_room = Piece("Billiard room", "Billiard_Room_Icon.png", ["S","W"], 2, ["gemme","gateau","permanent", "coffre"], 2, "bleu")
@@ -48,46 +57,6 @@ Morning_Room = Piece("Morning_Room", "Morning_Room_Icon.png", ["W","S"], 1, ["ge
 Nursery = Piece("Nursery", "Nursery_Icon.png", ["S"], 1, ["pas"], 1, "purple")
 Patio = Piece("Patio", "Patio_Icon.png", ["W","S"], 1, ["gemme","permanent", "creuser", "coffre"], 1, "green")
 Veranda = Piece("Veranda", "Veranda_Icon.png", ["N","S"], 1, ["gemme","permanent", "coffre"], 1, "green")
-
-salles = [
-    Entrance_Hall,
-    Antechamber,
-    Attic,
-    Billiard_room,
-    Closet,
-    Gallery,
-    Parlor,
-    Room_8,
-    Rotunda,
-    Spare_Room,
-    Storeroom,
-    The_foundation,
-    Walk_in_closet,
-    Locker_room,
-    Bookshop,
-    Bunk_room,
-    Chapel,
-    Great_hall,
-    Kitchen,
-    Secret_Garden,
-    Showroom,
-    Weight_room,
-    Archives,
-    Cloister,
-    Commissary,
-    Corridor,
-    Courtyard,
-    Foyer,
-    Furnace,
-    Gymnasium,
-    Laundry_Room,
-    Lavatory,
-    Locksmith,
-    Morning_Room,
-    Nursery,
-    Patio,
-    Veranda
-]
 
 salles = [
     Entrance_Hall,

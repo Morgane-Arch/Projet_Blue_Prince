@@ -2,6 +2,9 @@ from ObjetConso import ObjetsConsommables
 from objet_permanent import ObjetPermanent
 from interface_graphique import ROWS, COLS
 import pygame
+from pieces import salles
+
+
 
 
 
@@ -81,6 +84,14 @@ class Joueur:
         
         #mise à jour de la position
         self.position = (new_r, new_c)
+
+        # on applique l effet de la salle 
+        salle = salles[grid[new_r][new_c]]
+        salle.retirer_pas(self)
+
+
+
+
 
 
 
