@@ -163,7 +163,7 @@ def draw_bottom_right(salles_affichees, salles, selected_room_index, room_images
         screen.blit(text_img, text_rect)
 
 
-############ Définition des fonctions de jeu (A INCLURE DANS LES CLASSES JOUEUR ET PIECE ?) ############
+############ Définition des fonctions de jeu ############
 
 def change_room_selection(key, selected_room_index, salles_affichees):
     """Navigue dans la liste des salles affichées."""
@@ -189,7 +189,7 @@ def place_room(salles_affichees, selected_room_index, selected_cell, salles, gri
 
     return grid, selected_room_index
 
-def gestion_objets_salle():
+def gestion_objets_salle(joueur, grid, salles, objet_aleatoire, PERMANENTS):
     r, c = joueur.position
     nouvelle_piece_indice = grid[r][c]
 

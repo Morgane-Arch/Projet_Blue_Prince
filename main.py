@@ -4,10 +4,7 @@ L'affichage, les déplacements du joueur, le placement des salles, la boucle pri
 
 """
 
-from interface_graphique import (
-    draw_grid, draw_top_right, draw_bottom_right,
-    change_room_selection, place_room, gestion_objets_salle
-)
+from interface_graphique import *
 
 from joueur import Joueur
 from pieces import *
@@ -51,21 +48,7 @@ for piece in salles:
         # Image manquante → carré violet
         img_grid = pygame.Surface((IMG_SIZE_GRID, IMG_SIZE_GRID))
         img_grid.fill((150, 0, 150))
-        img_large = pygame.Surface((IMG_SIZE_LARG_
-
-from interface_graphique import (
-    draw_grid, draw_top_right, draw_bottom_right,
-    change_room_selection, place_room, gestion_objets_salle
-)
-
-from joueur import Joueur
-from pieces import *
-import pygame
-import sys
-import os
-import random
-from AleatoireObjet import AleatoireObjet
-from objet_permanent import PERMANENTS
+        img_large = pygame.Surface((IMG_SIZE_LARG_))
 
 
 
@@ -167,7 +150,7 @@ while True:
                         joueur.move_in_direction(grid)
                         grid, selected_room_index = place_room(salles_affichees, selected_room_index, joueur.position, salles, grid)
 
-                        gestion_objets_salle()
+                        gestion_objets_salle(joueur, grid, salles, objet_aleatoire, PERMANENTS)
                                  
                         salles_affichees = []
 
@@ -184,7 +167,7 @@ while True:
                         joueur.move_in_direction(grid)
                         grid, selected_room_index = place_room(salles_affichees, selected_room_index, joueur.position, salles, grid)
                         # ajouter objets de la salle
-                        gestion_objets_salle()
+                        gestion_objets_salle(joueur, grid, salles, objet_aleatoire, PERMANENTS)
                         salles_affichees = []
 
                 elif joueur.direction == "left" and c > 0 and "W" in salles[grid[r][c]].portes:
@@ -201,7 +184,7 @@ while True:
                         grid, selected_room_index = place_room(salles_affichees, selected_room_index, joueur.position, salles, grid)
                         ###### AJOUT (pour chaque bloc de déplacement)
                         #ajout des objets aléatoires dans la salle
-                        gestion_objets_salle()
+                        gestion_objets_salle(joueur, grid, salles, objet_aleatoire, PERMANENTS)
                         salles_affichees = []
 
                 elif joueur.direction == "right" and c < COLS - 1 and "E" in salles[grid[r][c]].portes:
@@ -218,7 +201,7 @@ while True:
                         grid, selected_room_index = place_room(salles_affichees, selected_room_index, joueur.position, salles, grid)
                         ###### AJOUT (pour chaque bloc de déplacement)
                         #ajout des objets aléatoires dans la salle
-                        gestion_objets_salle()                       
+                        gestion_objets_salle(joueur, grid, salles, objet_aleatoire, PERMANENTS)                       
                               
                         salles_affichees = []
                 
