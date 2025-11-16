@@ -81,7 +81,7 @@ def draw_grid(selected_direction, selected_cell, grid, room_images_grid):
                     draw_direction_highlight(rect, selected_direction, selected_cell)
 
 
-def draw_top_right(inventory, joueur):
+def draw_top_right(joueur):
     """Affiche les infos du joueur."""
     x0 = LEFT_PANEL_WIDTH
     pygame.draw.rect(screen, GRAY, (x0, 0, RIGHT_PANEL_WIDTH, TOP_RIGHT_HEIGHT))
