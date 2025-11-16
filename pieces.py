@@ -27,7 +27,7 @@ Walk_in_closet = Piece("Walk in closet","Walk-in_Closet_Icon.png", ["S"], 0, ["p
 Locker_room = Piece("Locker room","Locker_Room_Icon.png", ["N","S"], 0, [], 3, "bleu")
 
 
-salles = [Entrance_Hall, Antechamber, Attic, Billiard_room, Closet, Gallery, Parlor, Room_8, Rotunda, Spare_Room, Storeroom, The_foundation, Walk_in_closet]
+salles = [Entrance_Hall, Antechamber, Attic, Billiard_room, Closet, Gallery, Parlor, Room_8, Rotunda, Spare_Room, Storeroom, The_foundation, Walk_in_closet, Locker_room]
 
 
 

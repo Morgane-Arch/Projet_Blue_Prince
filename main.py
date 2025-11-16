@@ -61,6 +61,7 @@ grid = [[None for _ in range(COLS)] for _ in range(ROWS)]
 grid[8][2] = 0  # Mise en place de Entrance room sur la case du milieu du bas (0 = index de Entrance room)
 grid[0][2] = 1  # Mise en place de Antechamber sur la case du milieu du haut (1 = index de Antechamber)
 
+print("N" in salles[grid[8][2]].portes)
 
 
 
@@ -82,32 +83,64 @@ while True:
                 selected_room_index = change_room_selection(event.key, selected_room_index, salles_affichees)
             elif event.key in (pygame.K_RETURN, pygame.K_KP_ENTER):
                 r, c = joueur.position
-                if joueur.direction == "up" and r > 0:
+
+                if joueur.direction == "up" and r > 0 and "N" in salles[grid[r][c]].portes:
                     r -= 1
                     if salles_affichees == []:
-                        salles_affichees = random.sample([piece for piece in salles if "S" in piece.portes],3)
-                elif joueur.direction == "down" and r < ROWS - 1:
+                        salles_affichees = random.sample([piece for piece in salles[2:] if "S" in piece.portes],3)
+                    if not mode_selection and grid[r][c] == None:
+                        # Passe en mode sélection
+                        mode_selection = True
+                        draw_bottom_right(salles_affichees, salles, selected_room_index, room_images_large)
+                    else:
+                        mode_selection = False # Sortir du mode sélection
+                        joueur.move_in_direction(grid)
+                        grid, selected_room_index = place_room(salles_affichees, selected_room_index, joueur.position, salles, grid)
+                        salles_affichees = []
+
+                elif joueur.direction == "down" and r < ROWS - 1 and "S" in salles[grid[r][c]].portes:
                     r += 1
                     if salles_affichees == []:
-                        salles_affichees = random.sample([piece for piece in salles if "N" in piece.portes],3)
-                elif joueur.direction == "left" and c > 0:
+                        salles_affichees = random.sample([piece for piece in salles[2:] if "N" in piece.portes],3)
+                    if not mode_selection and grid[r][c] == None:
+                        # Passe en mode sélection
+                        mode_selection = True
+                        draw_bottom_right(salles_affichees, salles, selected_room_index, room_images_large)
+                    else:
+                        mode_selection = False # Sortir du mode sélection
+                        joueur.move_in_direction(grid)
+                        grid, selected_room_index = place_room(salles_affichees, selected_room_index, joueur.position, salles, grid)
+                        salles_affichees = []
+
+                elif joueur.direction == "left" and c > 0 and "W" in salles[grid[r][c]].portes:
                     c -= 1
                     if salles_affichees == []:
-                        salles_affichees = random.sample([piece for piece in salles if "E" in piece.portes],3)
-                elif joueur.direction == "right" and c < COLS - 1:
+                        salles_affichees = random.sample([piece for piece in salles[2:] if "E" in piece.portes],3)
+                    if not mode_selection and grid[r][c] == None:
+                        # Passe en mode sélection
+                        mode_selection = True
+                        draw_bottom_right(salles_affichees, salles, selected_room_index, room_images_large)
+                    else:
+                        mode_selection = False # Sortir du mode sélection
+                        joueur.move_in_direction(grid)
+                        grid, selected_room_index = place_room(salles_affichees, selected_room_index, joueur.position, salles, grid)
+                        salles_affichees = []
+
+                elif joueur.direction == "right" and c < COLS - 1 and "E" in salles[grid[r][c]].portes:
                     c += 1
                     if salles_affichees == []:
-                        salles_affichees = random.sample([piece for piece in salles if "W" in piece.portes],3)
+                        salles_affichees = random.sample([piece for piece in salles[2:] if "W" in piece.portes],3)
+                    if not mode_selection and grid[r][c] == None:
+                        # Passe en mode sélection
+                        mode_selection = True
+                        draw_bottom_right(salles_affichees, salles, selected_room_index, room_images_large)
+                    else:
+                        mode_selection = False # Sortir du mode sélection
+                        joueur.move_in_direction(grid)
+                        grid, selected_room_index = place_room(salles_affichees, selected_room_index, joueur.position, salles, grid)
+                        salles_affichees = []
                 
-                if not mode_selection and grid[r][c] == None:
-                    # Passe en mode sélection
-                    mode_selection = True
-                    draw_bottom_right(salles_affichees, salles, selected_room_index, room_images_large)
-                else:
-                    mode_selection = False # Sortir du mode sélection
-                    joueur.move_in_direction(grid)
-                    grid, selected_room_index = place_room(salles_affichees, selected_room_index, joueur.position, salles, grid)
-                    salles_affichees = []
+                
 
 
     # Affichage
