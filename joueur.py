@@ -80,7 +80,7 @@ class Joueur:
                 return
         
         #mise à jour de la position
-        self.position = [new_r, new_c]
+        self.position = (new_r, new_c)
 
 
 
