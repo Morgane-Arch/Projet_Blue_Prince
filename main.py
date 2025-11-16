@@ -1,3 +1,58 @@
+"""
+Ce fichier main gère :
+L'affichage, les déplacements du joueur, le placement des salles, la boucle principale Pygame
+
+"""
+
+from interface_graphique import (
+    draw_grid, draw_top_right, draw_bottom_right,
+    change_room_selection, place_room, gestion_objets_salle
+)
+
+from joueur import Joueur
+from pieces import *
+import pygame
+import sys
+import os
+import random
+from AleatoireObjet import AleatoireObjet
+from objet_permanent import PERMANENTS
+
+
+
+# ============================================================
+#  1. Chargement des images des salles
+# ============================================================
+
+"""
+Chargement des images des salles en deux formats :
+- Petit format : affichage dans la grille (5x9)
+- Grand format : affichage dans le panneau de sélection (droite)
+
+Si une image est introuvable, une couleur violette est utilisée à la place.
+"""
+
+ROOM_IMAGE_FOLDER = "Images_salles"
+selected_room_index = 0
+
+room_images_grid = []   # petites images pour la grille
+room_images_large = []  # grandes images pour la sélection à droite
+
+IMG_SIZE_GRID = int(CELL_SIZE * 0.9)
+IMG_SIZE_LARGE = 160
+
+for piece in salles:
+    path = os.path.join(ROOM_IMAGE_FOLDER, piece.image)
+    if os.path.exists(path):
+        original = pygame.image.load(path).convert_alpha()
+        img_grid = pygame.transform.smoothscale(original, (IMG_SIZE_GRID, IMG_SIZE_GRID))
+        img_large = pygame.transform.smoothscale(original, (IMG_SIZE_LARGE, IMG_SIZE_LARGE))
+    else:
+        # Image manquante → carré violet
+        img_grid = pygame.Surface((IMG_SIZE_GRID, IMG_SIZE_GRID))
+        img_grid.fill((150, 0, 150))
+        img_large = pygame.Surface((IMG_SIZE_LARG_
+
 from interface_graphique import (
     draw_grid, draw_top_right, draw_bottom_right,
     change_room_selection, place_room, gestion_objets_salle
@@ -77,7 +132,12 @@ grid[0][2] = 1  # Mise en place de Antechamber sur la case du milieu du haut (1 
 
 ############ Boucle de jeu ############
 
-# Boucle principale
+"""
+Boucle Pygame principale :
+Gère les déplacements, 
+Active le mode "sélection de salle" lorsqu'on découvre une case vide,
+Gère l'ajout automatique de salle + objets dans la pièce
+"""
 mode_selection = False
 
 while True:
