@@ -3,10 +3,16 @@ from ObjetConso import ObjetsConsommables
 
 class AutresObjets : 
     """
-    Classe représentant les autres objets que le joueur peut posséder - non consommable et différent des objets permanents
-    - nom_objet : str : le nom de l'objet (pomme, banane, gateau, sandiwch, repas, coffre, casier, endroit_à_creuser)
-    - contenu : str : ce que contient l'objet (par exemple pour un coffre, on a 10 pommes)
-    - est_ouvert : bool : indique si l'objet a deja ete ouvert ou deja ete utilisé 
+    Classe représentant les autres objets que le joueur peut posséder : des objets différents de consommables et permanents
+    Par exemple, des pommes, des coffres....
+    
+    Attribut : 
+        - nom_objet : str
+        Le nom de l'objet (pomme, banane, gateau, sandiwch, repas, coffre, casier, endroit_à_creuser)
+        - contenu : str 
+        Ce que contient l'objet (par exemple pour un coffre, on a 10 pommes)
+        - est_ouvert : bool 
+        Indique si l'objet a déjà été ouvert ou déjà été utilisé 
     """
     def __init__(self, nom_objet, contenu, est_utilise = False) : 
         self.nom_objet = nom_objet
@@ -16,13 +22,16 @@ class AutresObjets :
 
     
     def utiliser_objet_mangeable(self, joueur) :
-        """ Permet d'utiliser un objet mangeable 
-        Joueur : instance de la classe Joueur
+        """ 
+        Fonction permettant d'utiliser un objet mangeable 
+
+        Attribut : 
+            joueur : instance de la classe Joueur
         """
         if not isinstance(joueur, Joueur): 
             raise TypeError("L'argument doit être une instance de la classe Joueur")
         
-        #Maintenant on va regarder quel objet le joueur utilise
+        #On regarde quel objet le joueur utilise et on applique son effet
         if self.nom_objet == "pomme" : 
             joueur.consommables.ajouter_objet("pas", 2) 
             print(" Bonne nouvelle !!! Vous avez mangé une pomme, 2 pas ont été ajoutés à votre inventaire !")
@@ -47,22 +56,26 @@ class AutresObjets :
             raise ValueError("L'objet n'est pas mangeable ! Se référer à utiliser_objet_interactif pour les autres objet")
 
     def utiliser_objet_interactif(self, joueur) : 
-        """ Permet d'interagir avec un objet dit interactif 
-        joueur : instance de la classe Joueur 
+        """ 
+        Fonction permettant d'intéragir avec un objet dit intéractif 
+
+        Attribut : 
+            joueur : instance de la classe Joueur 
         """
 
         if not isinstance(joueur, Joueur): 
             raise TypeError("L'argument doit être une instance de la classe Joueur")
         
-        #verification que l'objet est bien interactif
+        #Vérification que l'objet soit bien intéractif
         if self.nom_objet not in ["coffre", "casier", "endroit_a_creuser"] : 
             raise ValueError("L'objet n'est pas interactif ! Se référer à utiliser_objet_mangeable pour les objets mangeables")
         
-        if self.est_utilise == True : #Si l'objet a deja ete ouvert
+        if self.est_utilise == True : #Si l'objet a déjà été ouvert
             print("L'objet a déjà été utilisé !")
             return
-        else : 
-            #Pour un casier, et un coffre il faut une clé pour l'ouvrir : 
+        else : # Si l'objet n'a pas été utilisé
+
+            #Pour un casier, il faut une clé pour l'ouvrir : 
             if self.nom_objet == "casier" : 
                 if joueur.consommables.cle == 0 : 
                     print(f"Le {self.nom_objet} est verrouillé... Vous n'avez pas assez de clé pour l'ouvrir...")
@@ -79,7 +92,7 @@ class AutresObjets :
                 else : 
                     print("vous utilisez votre pelle et creusez ici")
 
-            #Pour le coffre avec marteau ou une cle
+            #Pour le coffre : s'ouvre avec un marteau ou une clé
             elif self.nom_objet == "coffre" :
                 if joueur.peut_briser_cadenas_coffre == True :
                     print("Vous avez ouvert le cadenas grâce au marteau !!!")
@@ -90,11 +103,11 @@ class AutresObjets :
                     print("Vous n'avez ni clé ni marteau pour ouvrir le coffre.")
                     return
 
-            #Un coffre ne peut jamais etre vide d apres la consigne. Alors on met une condition 
+            #Un coffre ne peut jamais être vide. Alors on met une condition 
             if self.nom_objet == "coffre" and (self.contenu == None or self.contenu == {}) :
                 raise ValueError("un coffre ne peut pas etre vide !")
             
-            #une fois qu'on a passé toutes les conditions, on peut ouvrir l'objet 
+            #Une fois qu'on a passé toutes les conditions, on peut ouvrir l'objet 
             if self.contenu == None : 
                 print(f"Feinte... {self.nom_objet} est vide")
                 self.est_utilise = True
@@ -120,6 +133,6 @@ class AutresObjets :
                             contenu.utiliser_objet_mangeable(joueur) #le joueur utilise le contenu 
 
                     else : 
-                        print(f"L'objet {nom_objet} n'est pas mangeable et pas consommable.")
+                        print(f"L'objet {nom_objet} n'est pas mangeable ni consommable.")
 
                 self.est_utilise = True
