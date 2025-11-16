@@ -51,7 +51,7 @@ for piece in salles:
 ############ Initialisation des données du jeu ############
 
 # Création du joueur
-joueur = Joueur([8, 2]) # création d'un joueur à la position initiale [8,2]
+joueur = Joueur((8, 2)) # création d'un joueur à la position initiale [8,2]
 
 
 ##### AJOUT

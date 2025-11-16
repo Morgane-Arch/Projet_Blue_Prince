@@ -16,6 +16,7 @@ class Joueur:
 
         self.consommables = ObjetsConsommables() # Inventaire objets consommables
         self.objets_permanents = [] # Inventaire objets permanents 
+        self.autres_objets = []
 
         # effets liés aux objets permanents
         self.peut_creuser = False
@@ -86,8 +87,8 @@ class Joueur:
         self.position = (new_r, new_c)
 
         # on applique l effet de la salle 
-        salle = salles[grid[new_r][new_c]]
-        salle.retirer_pas(self)
+        #salle = salles[grid[new_r][new_c]]
+        #salle.retirer_pas(self)
 
 
 

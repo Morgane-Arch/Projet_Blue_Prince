@@ -75,7 +75,7 @@ def draw_grid(selected_direction, selected_cell, grid, room_images_grid):
                 pygame.draw.rect(screen, GRAY, rect)
             pygame.draw.rect(screen, (20, 20, 20), rect, 1)
 
-            if [r, c] == selected_cell:
+            if (r, c) == selected_cell:
                 pygame.draw.rect(screen, BLUE, rect, 3)
                 if selected_direction:
                     draw_direction_highlight(rect, selected_direction, selected_cell)
