@@ -117,6 +117,12 @@ while True:
                         mode_selection = False # Sortir du mode sélection
                         joueur.move_in_direction(grid)
                         grid, selected_room_index = place_room(salles_affichees, selected_room_index, joueur.position, salles, grid)
+                        
+                        # payer le coût de la salle
+                        piece_courante = salles[grid[joueur.position[0]][joueur.position[1]]]
+                            if piece_courante.cout > 0:
+                                joueur.consommables.retirer_objet("pas", piece_courante.cout)
+                                print(f"Vous payez {piece_courante.cout} pas pour entrer dans {piece_courante.nom}.")
 
                         gestion_objets_salle(joueur, grid, salles, objet_aleatoire, PERMANENTS)
                                  
@@ -134,6 +140,14 @@ while True:
                         mode_selection = False # Sortir du mode sélection
                         joueur.move_in_direction(grid)
                         grid, selected_room_index = place_room(salles_affichees, selected_room_index, joueur.position, salles, grid)
+
+                        # payer le coût de la salle
+                        piece_courante = salles[grid[joueur.position[0]][joueur.position[1]]]
+                            if piece_courante.cout > 0:
+                                joueur.consommables.retirer_objet("pas", piece_courante.cout)
+                                print(f"Vous payez {piece_courante.cout} pas pour entrer dans {piece_courante.nom}.")
+
+
                         # ajouter objets de la salle
                         gestion_objets_salle(joueur, grid, salles, objet_aleatoire, PERMANENTS)
                         salles_affichees = []
@@ -151,6 +165,14 @@ while True:
                         joueur.move_in_direction(grid)
                         grid, selected_room_index = place_room(salles_affichees, selected_room_index, joueur.position, salles, grid)
                         ###### AJOUT (pour chaque bloc de déplacement)
+
+                        # payer le coût de la salle
+                        piece_courante = salles[grid[joueur.position[0]][joueur.position[1]]]
+                            if piece_courante.cout > 0:
+                                joueur.consommables.retirer_objet("pas", piece_courante.cout)
+                                print(f"Vous payez {piece_courante.cout} pas pour entrer dans {piece_courante.nom}.")
+
+                        
                         #ajout des objets aléatoires dans la salle
                         gestion_objets_salle(joueur, grid, salles, objet_aleatoire, PERMANENTS)
                         salles_affichees = []
@@ -168,6 +190,14 @@ while True:
                         joueur.move_in_direction(grid)
                         grid, selected_room_index = place_room(salles_affichees, selected_room_index, joueur.position, salles, grid)
                         ###### AJOUT (pour chaque bloc de déplacement)
+
+                        # payer le coût de la salle
+                        piece_courante = salles[grid[joueur.position[0]][joueur.position[1]]]
+                            if piece_courante.cout > 0:
+                                joueur.consommables.retirer_objet("pas", piece_courante.cout)
+                                print(f"Vous payez {piece_courante.cout} pas pour entrer dans {piece_courante.nom}.")
+
+                        
                         #ajout des objets aléatoires dans la salle
                         gestion_objets_salle(joueur, grid, salles, objet_aleatoire, PERMANENTS)                       
                               
